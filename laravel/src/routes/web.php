@@ -5,6 +5,7 @@ use App\Http\Controllers\WebloginController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', [UserController::class,'index']);
-Route::get('/web/login',[WebloginController::class,'index']); 
+Route::post('/web/login',[WebloginController::class,'reqlogin']); 
 Route::get('/login', [UserController::class,'index']);
+Route::post('/web/api/logmail',[WebloginController::class,'loginemail']);
 

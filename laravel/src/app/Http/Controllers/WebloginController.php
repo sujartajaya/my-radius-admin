@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WebloginController extends Controller
 {
@@ -60,5 +61,19 @@ class WebloginController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function reqlogin(Request $request) {
+        $data = $request->all();
+        //dd(($data));
+        return view('weblogin.login',compact('data'));
+    }
+
+    public function loginemail(Request $request) {
+        $dataemail = $request->validate([
+            'email' => ['required','email:dns']
+        ]);
+        $radcheckuser = DB::table('radcheck')->where('username',$dataemail)->where('attribute','Cleartext-Password')->first();
+        return json_encode($radcheckuser);
     }
 }

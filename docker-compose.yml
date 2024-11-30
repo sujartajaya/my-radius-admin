@@ -8,6 +8,7 @@ services:
   #    - ./mysql/dbconfig:/home
       - ./mysql/data:/var/lib/mysql
     environment:
+      TZ: 'Asia/Makassar'
       MYSQL_ROOT_PASSWORD: password
     restart: unless-stopped
     networks:
@@ -24,9 +25,11 @@ services:
     ports:
       - 1812:1812/udp
       - 1813:1813/udp
-    volumes:
-      - ./freeradius/logs:/var/log/freeradius
+    #volumes:
+    #  - ./freeradius/logs:/var/log/freeradius
     restart: unless-stopped
+    environment:
+      - TZ=Asia/Makassar
     networks:
         - localnet
 
@@ -38,6 +41,7 @@ services:
         - 8080:80
       environment:
         - PMA_HOST=mysql
+        - TZ=Asia/Makassar
       networks:
         - localnet
 
@@ -70,6 +74,7 @@ services:
       DB_NAME: radius
       DB_PORT: 3306
       DB_CONNECTION_LIMIT: 10
+      TZ: 'Asia/Makassar'
     volumes:
       - ./laravel/src:/var/www
       - ./nginx:/etc/nginx/conf.d/
