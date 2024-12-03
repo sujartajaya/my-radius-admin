@@ -32,7 +32,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $credentials = $request->validate([
+            'name' => ['required'],
+            'email' => ['required', 'email:dns','unique:users'],
+            'password' => ['required', 'string', 'min:8', 'same:confirm_password'],
+            'confirm_password' => ['min:8']
+        ]);
+        $credentials['password'] = bcrypt($credentials['password']);
+        $user = User::create($credentials);
+        if ($user) {
+            return redirect('/');
+        }
     }
 
     /**
@@ -69,5 +79,31 @@ class UserController extends Controller
 
     public function login() {
         return view('user.login');
+    }
+
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email:dns'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/');
+        }
+
+         return back()->with('loginError','Login Failed!');
+    }
+
+    public function actionlogout()
+    {
+        Auth::logout();
+        return redirect('/');
+    }
+
+    public function registeruser()
+    {
+        return view('user.register');
     }
 }

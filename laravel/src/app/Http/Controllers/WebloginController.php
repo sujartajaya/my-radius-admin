@@ -128,4 +128,9 @@ class WebloginController extends Controller
     public function testlogin() {
         return view('weblogin.loginv1');
     }
+
+    public function testloginmail() 
+    {
+        return view('weblogin.email');
+    }
 }
