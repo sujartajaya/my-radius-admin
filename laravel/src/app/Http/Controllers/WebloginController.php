@@ -94,7 +94,7 @@ class WebloginController extends Controller
                     ]);
                     if ($addemail) {
                         $pesan['error'] = false;
-                        $pesan['data'] = $addemail;
+                        $pesan['data'] = "Email sudah ditambahkan bisa langsung konek";
                         $pesan['email'] = $email;
                     } else {
                         $pesan['error'] = true;
@@ -107,12 +107,12 @@ class WebloginController extends Controller
                 }
             } else {
                 $pesan['error'] = true;
-                $pesan['data'] = "Email tidak valid";
+                $pesan['data'] = "Your email not valid";
                 $pesan['email'] = $email;
             }
         } else {
             $pesan['error'] = true;
-            $pesan['data'] = "Email tidak valid";
+            $pesan['data'] = "Your email not valid";
             $pesan['email'] = $email;
         }
 

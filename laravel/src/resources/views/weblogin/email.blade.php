@@ -10,31 +10,17 @@
         <script type="text/javascript" src="/tsi/md5.js"></script>
         <script type="text/javascript">
             function doLogin() {
-                const sendinForm = document.getElemenById('sendin');
-                sendinForm.addEventListener("submit", (e) => {
-                    e.preventDefault();
-
-                    axios
-                        .post("http://localhost:8000/web/api/logmail",{
-                            'email' : 'putu@velo.co.id'
-                        },{
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        })
-                        .then ((response) => {
-                            //console.log(reponse);
-                            const data = JSON.parse(response.data);
-                            
-                        })
-                })
-                 /** ini dikembalikan */
+                  <?php if(strlen($data['chap-id']) < 1) echo "return true;\n"; ?>
+                  document.sendin.username.value = document.login.username.value;
+                  document.sendin.password.value = hexMD5('<?php echo $data['chap-id']; ?>' + document.login.username.value + '<?php echo $data['chap-challenge']; ?>');
+                  document.sendin.submit();
+                  return false;
             }
             function test() {
-                    let username = document.getElementById('username')
+                    let email = document.getElementById('email')
                     axios
                         .post("http://localhost:8000/web/api/logmail",{
-                            'email' : username.value
+                            'email' : email.value
                         },{
                             headers: {
                                 'Content-Type': 'multipart/form-data'
@@ -42,6 +28,14 @@
                         })
                         .then ((response) => {
                             console.log(response.data);
+                            const data = response.data;
+                            if (data['error']) {
+                                document.getElementById("error").innerHTML = data['data'];
+                            } else {
+                                /** Kode untuk langsung login */
+                                doLogin();
+                                //document.getElementById("error").innerHTML = data['data'];
+                            }
                             //const data = response.data;
                             //username.value = data[0].username                        
                         })
@@ -57,10 +51,11 @@
                     <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl items-center">
                         Welcome to Bali Marine Park
                     </h1>
+                    <div id="error" class="invalid block text-sm font-medium text-gray-700 dark:text-red-600 mb-2"></div>
                     <form class="space-y-4 md:space-y-6" name="login" action="#" method="post" onSubmit="return doLogin()">
                         @csrf
                         <div>
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
                             <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="email" required="" autofocus >
                         </div>
                     </form>
