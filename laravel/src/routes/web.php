@@ -14,6 +14,7 @@ Route::get('/user/register',[UserController::class,'registeruser']);
 Route::post('/user/register',[UserController::class,'store']);
 Route::post('/login',[UserController::class,'authenticate']);
 Route::post('/logout',[UserController::class,'actionlogout']);
+Route::post('/web/api/checkmember',[WebloginController::class,'checkMember']);
 
 
 

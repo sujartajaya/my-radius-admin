@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Member;
+use DateTime;
 
 class WebloginController extends Controller
 {
@@ -66,7 +68,8 @@ class WebloginController extends Controller
     public function reqlogin(Request $request) {
         $data = $request->all();
         //dd(($data));
-        return view('weblogin.login',compact('data'));
+        //return view('weblogin.login',compact('data'));
+        return view('weblogin.emailv1',compact('data'));
     }
 
     public function loginemail(Request $request) {
@@ -78,8 +81,8 @@ class WebloginController extends Controller
             /** cek domain email */
             $emailArray = explode("@", $email);
             if (checkdnsrr(array_pop($emailArray), "MX")) {
-                $emaildb = DB::table('radcheck')->where('username',$email)->first();
-                if (!($emaildb)) {
+                $emaildb = DB::table('radcheck')->where('username',$email)->orderBy('id','asc')->get();
+                if (($emaildb->count() == 0)) {
                     $data = [
                         "username" => $email,
                         "attribute" => "Cleartext-Password",
@@ -87,42 +90,73 @@ class WebloginController extends Controller
                         "value" => $email
                     ];
                     $addemail = DB::table('radcheck')->insert($data);
+                   
+                    $waktu = new DateTime();
+                    $waktu1 = $waktu->modify("+30 minutes");
+                    $expiration = $waktu1->format('d M Y H:i:s');
+
+                    $data = [
+                        "username" => $email,
+                        "attribute" => "Expiration",
+                        "op" => ":=",
+                        "value" => $expiration
+                    ];
+                    $addemail = DB::table('radcheck')->insert($data);
+
                     $usergroup = DB::table('radusergroup')->insert([
                         "username" => $email,
                         "groupname" => "limit1M",
                         "priority" => 10
                     ]);
+
                     if ($addemail) {
                         $pesan['error'] = false;
                         $pesan['data'] = "Email sudah ditambahkan bisa langsung konek";
                         $pesan['email'] = $email;
+                        return json_encode($pesan);
                     } else {
                         $pesan['error'] = true;
                         $pesan['data'] = 'Ada kesalahan pada database';
                         $pesan['email'] = $email;
+                        return json_encode($pesan);
                     }
                 }  else {
-                    $pesan['error'] = false;
-                    $pesan['data'] = "Email sudah ada bisa langsung konek";
+                    if ($emaildb->count() > 1) {
+                        $expire = $emaildb[1]->value;
+                        $today = new DateTime();
+                        $tgl = $today->format('d M Y H:i:s');
+                        $tgl_expire = strtotime($expire);
+                        $tgl_sekarang = strtotime($tgl);
+
+                        if ($tgl_expire < $tgl_sekarang) {
+                            $pesan['data'] = 'Email login anda telah expired!';
+                            $pesan['error'] = true;
+                        } else {
+                            $pesan['data'] = 'Email login anda masih berlaku!';
+                            $pesan['error'] = false;
+                        }
+                        $pesan['email'] = $emaildb;
+
+                        return json_encode($pesan);
+                    } else {
+                        $pesan['data'] = 'Email khusus member!';
+                        $pesan['error'] = false;
+                        $pesan['email'] = $emaildb;
+                        return json_encode($pesan);
+                    }
                 }
             } else {
                 $pesan['error'] = true;
                 $pesan['data'] = "Your email not valid";
                 $pesan['email'] = $email;
+                return json_encode($pesan);
             }
         } else {
             $pesan['error'] = true;
             $pesan['data'] = "Your email not valid";
             $pesan['email'] = $email;
+            return json_encode($pesan);
         }
-
-        // $dataemail = $request->validate([
-        //     'email' => ['required','email:dns']
-        // ]);
-        //$radcheckuser = DB::table('radcheck')->where('username',$dataemail)->where('attribute','Cleartext-Password')->first();
-        //$radcheckuser = DB::table('radcheck')->get();
-
-        return json_encode($pesan);
     }
 
     public function testlogin() {
@@ -133,4 +167,32 @@ class WebloginController extends Controller
     {
         return view('weblogin.email');
     }
+
+    public function checkMember(Request $request)
+    {
+        $data =  $request->all();
+        $member = Member::where('email',$request->email)->first();
+        $res = [];
+
+        if ($member) {
+            $res['error'] = false;
+            $res['data'] = $member;
+            return json_encode($res);
+        } else {
+            $datamem = Member::create($data);
+
+            if ($datamem)
+            {
+                $res['error'] = false;
+                $res['data'] = $datamem;
+                return json_encode($res);
+            } else {
+                $res['error'] = true;
+                $res['data'] = "Ada error saat simpasan data member";
+                return json_encode($res);
+            }
+        }
+    }
+
+    
 }

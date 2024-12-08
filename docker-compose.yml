@@ -85,6 +85,8 @@ services:
     image: nginx:alpine
     container_name: my-nginx-container-01
     restart: unless-stopped
+    environment:
+      - TZ=Asia/Makassar
     ports:
       - 8000:80
     volumes:
