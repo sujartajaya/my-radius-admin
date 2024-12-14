@@ -3,6 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\AuthMiddleware;
+use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\OperatorMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
         'web/*',
+        ]);
+        $middleware->alias([
+            'auth' => AuthMiddleware::class,
+            'admin' => AdminMiddleware::class,
+            'operator' => OperatorMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
