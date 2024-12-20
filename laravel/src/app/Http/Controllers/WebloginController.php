@@ -202,5 +202,9 @@ class WebloginController extends Controller
         return view('weblogin.users',compact('users'));
     }
 
+    public function viewModal()
+    {
+        return view('weblogin.modal');
+    }
 
 }
