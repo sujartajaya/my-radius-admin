@@ -5,6 +5,7 @@ use App\Http\Controllers\WebloginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\TestController;
 
 Route::get('/', [UserController::class,'index']);
 Route::get('/home', [AdminController::class,'index']);
@@ -29,13 +30,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout',[UserController::class,'actionlogout']);
 });
 
-Route::middleware('admin')->prefix('/admin')->group(function () {
+// Route::middleware('admin')->prefix('/admin')->group(function () {
     
-});
+// });
 
-Route::middleware('operator')->prefix('/op')->group(function () {
+// Route::middleware('operator')->prefix('/op')->group(function () {
     
-});
+// });
 
 Route::post('/web/api/checkmember',[WebloginController::class,'checkMember']);
 
@@ -44,3 +45,10 @@ Route::post('/web/checkmem',[MemberController::class,'memberValidator']);
 Route::post('/web/member',[MemberController::class,'store']);
 
 Route::get('/web/members',[MemberController::class,'getMembers']);
+
+
+Route::prefix('/test')->group(function () {
+    Route::get('/tab1',[TestController::class,'index']);
+    Route::get('/tab2',[TestController::class,'tab2']);
+    Route::get('/tab3',[TestController::class,'tab3']);
+});

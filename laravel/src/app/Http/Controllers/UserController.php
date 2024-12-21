@@ -14,7 +14,7 @@ class UserController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            
+            return view('admin.dashboard');
         } else {
             return view('user.login');
         }

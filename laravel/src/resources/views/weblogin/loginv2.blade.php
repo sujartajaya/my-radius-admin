@@ -1,6 +1,18 @@
-@extends('layout.app')
+@extends('layout.weblogin')
     @section('content')
-        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0 mt-10">
+        <div class="max-w-4xl mx-auto mt-1">
+            <!-- Tab Navigation -->
+            <div class="bg-white shadow-md rounded-t-lg">
+                <div class="flex">
+                    <button class="tab-btn py-2 px-6 w-full text-lg font-medium text-gray-700 focus:outline-none hover:text-blue-600 transition-all border-b-2 border-transparent hover:border-blue-500" onclick="openTab(event, 'tab1')">Staff</button>
+                    <button class="tab-btn py-2 px-6 w-full text-lg font-medium text-gray-700 focus:outline-none hover:text-blue-600 transition-all border-b-2 border-transparent hover:border-blue-500" onclick="openTab(event, 'tab2')">Guest</button>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="bg-white p-6 rounded-b-lg shadow-md mt-2">
+            <div id="tab1" class="tab-pane hidden">
+            <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0 mt-10">
             <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 justify-center items-center">
                 <div class="flex items-center justify-center">
                     <img src="/logo.png" alt="Logo" width="30%" height="30%"/>
@@ -32,5 +44,32 @@
                 </div>
             </div>
         </div>
-    @endsection
+            </div>
+            <div id="tab2" class="tab-pane hidden">
+                <h2 class="text-2xl font-semibold">Konten Tab 2</h2>
+                <p>Ini adalah konten untuk tab kedua. Cobalah menambahkan berbagai elemen lain di sini.</p>
+            </div>
+            </div>
+        </div>
 
+        <script>
+            function openTab(event, tabName) {
+            // Sembunyikan semua tab
+            const tabContents = document.querySelectorAll('.tab-pane');
+            tabContents.forEach((tab) => tab.classList.add('hidden'));
+
+            // Nonaktifkan semua tombol tab
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach((button) => button.classList.remove('text-blue-600', 'border-blue-500'));
+
+            // Tampilkan tab yang dipilih
+            document.getElementById(tabName).classList.remove('hidden');
+
+            // Tambahkan gaya aktif pada tombol tab
+            event.currentTarget.classList.add('text-blue-600', 'border-blue-500');
+            }
+
+            // Default buka tab pertama
+            document.querySelector('.tab-btn').click();
+        </script>
+    @endsection
