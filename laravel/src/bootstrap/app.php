@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
         'web/*',
+        'test/*',
         ]);
         $middleware->alias([
             'auth' => AuthMiddleware::class,

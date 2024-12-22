@@ -15,7 +15,6 @@ Route::post('/user/register',[UserController::class,'store']);
 Route::post('/login',[UserController::class,'authenticate']);
 Route::get('/hotspot/users',[WebloginController::class,'getAllUsers']);
 Route::get('/hotspot/user/create',[WebloginController::class,'create']);
-Route::get('/modal',[WebloginController::class,'viewModal']);
 
 
 Route::prefix('/web')->group(function () {
@@ -23,7 +22,9 @@ Route::prefix('/web')->group(function () {
     Route::get('/api/test',[WebloginController::class,'testlogin']);
     Route::get('/api/users',[WebloginController::class,'getAllUsers']);
     Route::post('/api/logmail',[WebloginController::class,'loginemail']);
-    Route::post('/login',[WebloginController::class,'reqlogin']);
+    //Route::post('/login',[WebloginController::class,'reqlogin']); /** login hotspot */
+    Route::post('/login',[TestController::class,'loginv2']);
+
 });
 
 Route::middleware('auth')->group(function () {
@@ -51,4 +52,7 @@ Route::prefix('/test')->group(function () {
     Route::get('/tab1',[TestController::class,'index']);
     Route::get('/tab2',[TestController::class,'tab2']);
     Route::get('/tab3',[TestController::class,'tab3']);
+    Route::get('/loginv2',[TestController::class,'loginv2']);
+    Route::post('/loginv2',[TestController::class,'loginv2']);
+    Route::get('/modal',[WebloginController::class,'viewModal']);
 });

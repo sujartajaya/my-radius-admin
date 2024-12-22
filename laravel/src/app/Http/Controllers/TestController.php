@@ -23,6 +23,13 @@ class TestController extends Controller
     {
         return view('test.tab3');
     }
+
+    public function loginv2(Request $request)
+    {
+        $data = $request->all();
+        return view('weblogin.loginv2',compact('data'));
+    }
+    
     /**
      * Show the form for creating a new resource.
      */

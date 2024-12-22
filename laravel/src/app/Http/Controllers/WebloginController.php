@@ -93,7 +93,7 @@ class WebloginController extends Controller
                     $addemail = DB::table('radcheck')->insert($data);
                    
                     $waktu = new DateTime();
-                    $waktu1 = $waktu->modify("+30 minutes");
+                    $waktu1 = $waktu->modify("+360 minutes");
                     $expiration = $waktu1->format('d M Y H:i:s');
 
                     $data = [
@@ -106,7 +106,7 @@ class WebloginController extends Controller
 
                     $usergroup = DB::table('radusergroup')->insert([
                         "username" => $email,
-                        "groupname" => "limit1M",
+                        "groupname" => "GUEST",
                         "priority" => 10
                     ]);
 
