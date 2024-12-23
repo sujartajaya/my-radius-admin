@@ -24,8 +24,9 @@ return new class extends Migration
             $table->string('zip')->nullable();
             $table->string('phone')->nullable();
             $table->string('member_id')->nullable();
+            $table->enum('member',['staff','guest'])->default('staff');
             $table->enum('status',['active','hold'])->default('active');
-            $table->datetime('valid_date')->default('2050-01-01 00:00:00');
+            $table->datetime('valid_date')->nullable();
             $table->timestamps();
         });
     }

@@ -55,4 +55,6 @@ Route::prefix('/test')->group(function () {
     Route::get('/loginv2',[TestController::class,'loginv2']);
     Route::post('/loginv2',[TestController::class,'loginv2']);
     Route::get('/modal',[WebloginController::class,'viewModal']);
+    Route::get('/users/{username}',[WebloginController::class,'showUser']);
+
 });
