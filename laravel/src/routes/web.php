@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UserhotspotController;
 
 Route::get('/', [UserController::class,'index']);
 Route::get('/home', [AdminController::class,'index']);
@@ -13,8 +14,6 @@ Route::get('/login', [UserController::class,'index']);
 Route::get('/user/register',[UserController::class,'registeruser']);
 Route::post('/user/register',[UserController::class,'store']);
 Route::post('/login',[UserController::class,'authenticate']);
-Route::get('/hotspot/users',[WebloginController::class,'getAllUsers']);
-Route::get('/hotspot/user/create',[WebloginController::class,'create']);
 
 
 Route::prefix('/web')->group(function () {
@@ -56,5 +55,17 @@ Route::prefix('/test')->group(function () {
     Route::post('/loginv2',[TestController::class,'loginv2']);
     Route::get('/modal',[WebloginController::class,'viewModal']);
     Route::get('/users/{username}',[WebloginController::class,'showUser']);
+    Route::get('/modal1', function () {
+        return view('test.modal1');
+    });
 
 });
+
+Route::prefix('/hotspot')->group(function () {
+    Route::get('/users',[UserhotspotController::class,'index']);
+    Route::post('/user',[UserhotspotController::class,'store']);
+    Route::get('/login/user',[WebloginController::class,'getAllUsers']);
+    Route::get('/user/create',[WebloginController::class,'create']);
+});
+
+

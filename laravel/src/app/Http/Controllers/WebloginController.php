@@ -204,16 +204,16 @@ class WebloginController extends Controller
 
         //$users =  DB::table('radcheck')->select('radcheck.id','radcheck.username','radusergroup.groupname','radgroupreply.attribute','radgroupreply.op','radgroupreply.value','radusergroup.priority')->leftJoin('radusergroup','radusergroup.username','radcheck.username')->leftJoin('radgroupreply','radgroupreply.groupname','radusergroup.groupname')->where('radcheck.attribute','Cleartext-Password')->paginate(5);
         
-       // $users = Radcheck::search($request->search)->select('radcheck.id','radcheck.username','radusergroup.groupname','radgroupreply.attribute','radgroupreply.op','radgroupreply.value','radusergroup.priority')->leftJoin('radusergroup','radusergroup.username','radcheck.username')->leftJoin('radgroupreply','radgroupreply.groupname','radusergroup.groupname')->where('radcheck.attribute','Cleartext-Password')->paginate(5);
+       $users = Radcheck::search($request->search)->select('radcheck.id','radcheck.username','radusergroup.groupname','radgroupreply.attribute','radgroupreply.op','radgroupreply.value','radusergroup.priority')->leftJoin('radusergroup','radusergroup.username','radcheck.username')->leftJoin('radgroupreply','radgroupreply.groupname','radusergroup.groupname')->where('radcheck.attribute','Cleartext-Password')->paginate(2);
 
         //return json_encode($users);
 
-        $users = Radcheck::search($request->search)->where('attribute','Cleartext-Password')->paginate(5);
+        //$users = Radcheck::search($request->search)->where('attribute','Cleartext-Password')->paginate(5);
 
 
-        return json_encode($users);
+        //return json_encode($users);
 
-        //return view('weblogin.users',compact('users'));
+        return view('weblogin.users',compact('users'));
     }
 
     public function viewModal()
