@@ -1,5 +1,50 @@
 @extends('layout.app')
     @section('content')
+    <script>
+      let editdata = false;
+      let iduser = 0;
+      function edit(id) {
+        editdata = true;
+        iduser = id;
+        const saveFooterBtn = document.getElementById('saveFooterBtn');
+        const modal = document.getElementById('largeModal');
+        saveFooterBtn.innerHTML = "Update";
+        axios
+            .get(
+              "<?php echo env('APP_URL'); ?>:8000/hotspot/user/"+id
+            )
+            .then((response) => {
+                const name = document.getElementById('name');
+                const email = document.getElementById('email');
+                const username = document.getElementById('username');
+                const password = document.getElementById('password');
+                const department = document.getElementById('department');
+                const phone = document.getElementById('phone');
+                const address = document.getElementById('address');
+                const time_limit = document.getElementById('time_limit');
+                const time_over = document.getElementById('time_over');
+                name.value = response.data.name;
+                email.value = response.data.email;
+                username.value = response.data.username;
+                password.value = response.data.password;
+                department.value = response.data.department;
+                phone.value = response.data.phone;
+                address.value = response.data.address;
+                if (response.data.time_limit) {
+                  time_limit.value = response.data.time_limit;
+                } else {
+                  time_limit.value = 0;
+                }
+                time_over.value = response.data.time_over;
+            })
+            .catch(err => {
+            console.log('Oh noooo!!');
+            console.log(err);
+          });
+        modal.classList.remove('hidden');
+        
+    }
+    </script>
     <div class="max-w w-full">
         <div class="flex flex-col items-center justify-center px-3 py-8 mx-auto lg:py-0 mt-1">
             <div class="w-full max-w-4xl bg-white rounded-lg shadow-md p-6">
@@ -44,16 +89,19 @@
                     </tr>
                     </thead>
                     <tbody>
+                    <?php $i=$userhotspots->firstItem(); $dt = 0; ?>
+                    @foreach ($userhotspots as $user)
                     <tr>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">1</td>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">John Doe</td>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">johndoe@example.com</td>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">john</td>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">Housekeeping</td>
+                        <?php $dt=$dt+1; ?>
+                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ $i++ }}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ $user->name }}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{$user->email}}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ $user->username }}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">{{ $user->department }}</td>
                         <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
                         <div class="flex space-x-2">
                             <button
-                            class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+                            class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400" onClick="edit({{ $user->id }})"
                             >
                             Edit
                             </button>
@@ -65,29 +113,12 @@
                         </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">2</td>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">Jane Smith</td>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">janesmith@example.com</td>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">Jane</td>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">IT</td>
-                        <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
-                        <div class="flex space-x-2">
-                            <button
-                            class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
-                            >
-                            Edit
-                            </button>
-                            <button
-                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
-                            >
-                            Delete
-                            </button>
-                        </div>
-                        </td>
-                    </tr>
+                    @endforeach
                     </tbody>
                 </table>
+                <div class="w-full text-sm text-left rtl:text-right text-gray-500 mt-2">
+                    {{$userhotspots->withQueryString()->links()}}
+                </div>
                 </div>
             </div>
         </div>
@@ -110,6 +141,7 @@
       </div>
       <!-- Modal Body -->
       <div class="relative p-6 flex-auto">
+                            <form>
                             <div class="flex flex-wrap -mx-3 mb-4">
                                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">
@@ -135,7 +167,7 @@
                                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="password">
                                                 Password
                                             </label>
-                                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="password" type="password" placeholder="******************">
+                                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="password" type="text" placeholder="******************">
                                         </div>
                             </div>
                             <div class="flex flex-wrap -mx-3 mb-4">
@@ -166,8 +198,8 @@
                                             Time Limit
                                         </label>
                                         <select class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="time_limit" type="checkbox">
-                                            <option value="false">False</option>
-                                            <option value="true" selected>True</option>
+                                            <option value="0">False</option>
+                                            <option value="1" selected>True</option>
                                         </select>
                                         </div>
                                         <div class="w-full md:w-1/2 px-3">
@@ -177,7 +209,7 @@
                                             <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="time_over" type="number" value="60">
                                         </div>
                             </div>
-                            
+                            </form>
 
       </div>
       <!-- Modal Footer -->
@@ -195,20 +227,29 @@
     </div>
   </div>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script>
     // JavaScript to handle modal visibility
+    const per_page = {{ $userhotspots->perPage() }}
+    let last_page = {{ $userhotspots->lastPage() }}
+    const url_base = "{{ env('APP_URL')}}:8000/hotspot/users";
+    const data_table = {{ $userhotspots->total() }}
+
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const closeFooterBtn = document.getElementById('closeFooterBtn');
     const modal = document.getElementById('largeModal');
     const saveFooterBtn = document.getElementById('saveFooterBtn');
+   
 
     openModalBtn.addEventListener('click', () => {
+      saveFooterBtn.innerHTML = "Save";
+      editdata = false;
       modal.classList.remove('hidden');
     });
 
     saveFooterBtn.addEventListener('click', () => {
-
+        modal.classList.remove('hidden');
         const name = document.getElementById('name');
         const email = document.getElementById('email');
         const username = document.getElementById('username');
@@ -218,8 +259,153 @@
         const address = document.getElementById('address');
         const time_limit = document.getElementById('time_limit');
         const time_over = document.getElementById('time_over');
+        if (editdata == false) {
+        axios
+          .post("<?php echo env('APP_URL'); ?>:8000/hotspot/user",{
+                            'name' : name.value,
+                            'email' : email.value,
+                            'username' : username.value,
+                            'password' : password.value,
+                            'department' : department.value,
+                            'phone' : phone.value,
+                            'address' : address.value,
+                            'time_limit' : time_limit.value,
+                            'time_over' : time_over.value
+                        },{
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
 
-        alert("Klikc "+name.value);
+          )
+          .then((response) => {
+                            console.log(response.data);
+                            const data = response.data;
+                            if (data['error']) {
+                                const pesan = data['msg'];
+                                let pesan_error;
+                                if ('name' in pesan) {
+                                  pesan_error = pesan.name[0]+"\n";
+                                }
+                                if ('email' in pesan) {
+                                  pesan_error = pesan_error+pesan.email[0]+"\n";
+                                }
+                                if ('username' in pesan) {
+                                  pesan_error = pesan_error+pesan.username[0]+"\n";
+                                }
+                                if ('password' in pesan) {
+                                  pesan_error = pesan_error+pesan.password[0]+"\n";
+                                }
+                                if ('department' in pesan) {
+                                  pesan_error = pesan_error+pesan.department[0];
+                                }
+                                swal({
+                                      title: 'Validation data',
+                                      text: pesan_error,
+                                      icon: 'error',
+                                      button: true
+                                  });
+                                //alert(data['data']);
+                                //document.getElementById("error").innerHTML = data['data'];
+                            } else {
+                                modal.classList.add('hidden');
+                                
+                                let sisa = data_table % per_page;
+
+                                if (sisa == 0) {
+                                  last_page = last_page + 1;
+                                  location.replace(url_base+"?page="+last_page); 
+                                } else {
+                                  location.replace(url_base+"?page="+last_page); 
+                                }   
+
+                                /** Kode untuk langsung login */
+                                //emailLogin(email.value);
+                                //document.getElementById("error").innerHTML = data['data'];
+                            }
+                            //const data = response.data;
+                            //username.value = data[0].username                        
+                        }
+          )
+          .catch(err => {
+            console.log('Oh noooo!!');
+            console.log(err);
+          })
+        } sele {
+          axios
+            .patch("<?php echo env('APP_URL'); ?>:8000/hotspot/user/"+iduser,{
+                            'name' : name.value,
+                            'email' : email.value,
+                            'username' : username.value,
+                            'password' : password.value,
+                            'department' : department.value,
+                            'phone' : phone.value,
+                            'address' : address.value,
+                            'time_limit' : time_limit.value,
+                            'time_over' : time_over.value
+                        },{
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+
+            )
+            .then((response) => {
+                            console.log(response.data);
+                            const data = response.data;
+                            if (data['error']) {
+                                const pesan = data['msg'];
+                                let pesan_error;
+                                if ('name' in pesan) {
+                                  pesan_error = pesan.name[0]+"\n";
+                                }
+                                if ('email' in pesan) {
+                                  pesan_error = pesan_error+pesan.email[0]+"\n";
+                                }
+                                if ('username' in pesan) {
+                                  pesan_error = pesan_error+pesan.username[0]+"\n";
+                                }
+                                if ('password' in pesan) {
+                                  pesan_error = pesan_error+pesan.password[0]+"\n";
+                                }
+                                if ('department' in pesan) {
+                                  pesan_error = pesan_error+pesan.department[0];
+                                }
+                                swal({
+                                      title: 'Validation data',
+                                      text: pesan_error,
+                                      icon: 'error',
+                                      button: true
+                                  });
+                                //alert(data['data']);
+                                //document.getElementById("error").innerHTML = data['data'];
+                            } else {
+                                modal.classList.add('hidden');
+                                
+                                let sisa = data_table % per_page;
+
+                                if (sisa == 0) {
+                                  last_page = last_page + 1;
+                                  location.replace(url_base+"?page="+last_page); 
+                                } else {
+                                  location.replace(url_base+"?page="+last_page); 
+                                }   
+
+                                /** Kode untuk langsung login */
+                                //emailLogin(email.value);
+                                //document.getElementById("error").innerHTML = data['data'];
+                            }
+                            //const data = response.data;
+                            //username.value = data[0].username                        
+                        }
+
+            )
+            .catch(err => {
+              console.log('Oh noooo!!');
+              console.log(err);
+            })
+        }
+
 
     });
 

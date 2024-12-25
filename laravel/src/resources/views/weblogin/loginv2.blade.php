@@ -31,7 +31,7 @@
             function checkEmail() {
                 let email = document.getElementById('email');
                     axios
-                        .post("http://192.168.36.233:8000/web/api/logmail",{
+                        .post("<?php echo env('APP_URL'); ?>:8000/web/api/logmail",{
                             'email' : email.value
                         },{
                             headers: {

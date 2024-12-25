@@ -10,6 +10,7 @@ class Userhotspot extends Model
         'name',
         'email',
         'username',
+        'password',
         'address',
         'department',
         'phone',

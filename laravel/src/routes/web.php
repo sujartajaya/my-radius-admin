@@ -62,8 +62,10 @@ Route::prefix('/test')->group(function () {
 });
 
 Route::prefix('/hotspot')->group(function () {
-    Route::get('/users',[UserhotspotController::class,'index']);
-    Route::post('/user',[UserhotspotController::class,'store']);
+    Route::get('/users',[UserhotspotController::class,'index']); /** blade */
+    Route::post('/user',[UserhotspotController::class,'store']); /** api */
+    Route::get('/user/{id}',[UserhotspotController::class,'edit']); /** api */
+    Route::patch('/user/{id}',[UserhotspotController::class,'update']); /** api */
     Route::get('/login/user',[WebloginController::class,'getAllUsers']);
     Route::get('/user/create',[WebloginController::class,'create']);
 });
