@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserhotspotController;
+use App\Http\Controllers\MikrotikController;
 
 Route::get('/', [UserController::class,'index']);
 Route::get('/home', [AdminController::class,'index']);
@@ -61,7 +62,7 @@ Route::prefix('/test')->group(function () {
 
 });
 
-Route::prefix('/hotspot')->group(function () {
+Route::middleware('auth')->prefix('/hotspot')->group(function () {
     Route::get('/users',[UserhotspotController::class,'index']); /** blade */
     Route::post('/user',[UserhotspotController::class,'store']); /** api */
     Route::get('/user/{id}',[UserhotspotController::class,'edit']); /** api */
@@ -70,4 +71,8 @@ Route::prefix('/hotspot')->group(function () {
     Route::get('/user/create',[WebloginController::class,'create']);
 });
 
+Route::middleware('auth')->prefix('/mikrotik')->group(function () {
+    Route::get('/system',[MikrotikController::class,'system']); /** api */
+    Route::get('/userprofile',[MikrotikController::class,'hotspot_user_profile']); /** api */
+});
 

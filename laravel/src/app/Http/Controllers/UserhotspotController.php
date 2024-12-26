@@ -13,7 +13,7 @@ class UserhotspotController extends Controller
      */
     public function index(Request $request)
     {
-        $userhotspots = Userhotspot::search($request->search)->paginate(5);
+        $userhotspots = Userhotspot::search($request->search)->paginate(8);
         
         //return json_encode($userhotspots);
 
@@ -35,7 +35,7 @@ class UserhotspotController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => ['required'],
-            'email' => ['required', 'email:dns','unique:userhotspots'],
+            'email' => ['required', 'email:rfc,dns','unique:userhotspots'],
             'username' => ['required', 'unique:userhotspots'],
             'department' => ['required'],
             'password' => ['required'],
@@ -78,32 +78,45 @@ class UserhotspotController extends Controller
     public function update(Request $request, Userhotspot $userhotspot, $id)
     {
         $user = $userhotspot->find($id);
-        $validator = "";
+
+       //return response()->json($request->username);
+
+        $validator = [];
+        $msgvalidator = [];
         $data = [];
-        
         if ($user->email != $request->email) {
             $validator = Validator::make($request->all(), [
-                'email' => ['required', 'email:dns','unique:userhotspots']
+                'email' => ['required', 'email:rfc,dns','unique:userhotspots']
             ]);
+            if ($validator->fails()) {
+                $msgvalidator['email'] = $validator->messages(); 
+            }
         }
         if ($user->username != $request->username) {
             $validator = Validator::make($request->all(), [
                 'username' => ['required','unique:userhotspots']
             ]);
+            if ($validator->fails()) {
+                $msgvalidator['username'] = $validator->messages(); 
+            }
         }
 
         if ($validator) {
             if($validator->fails()){
             $data['error'] = true;
-            $data['msg'] = $validator->messages();
+            $data['msg'] = $msgvalidator;
             return response()->json($data, 200);
             } else {
                 $data['error'] = false;
-                //$datasave = Userhotspot::create($request->all());
-                $data['msg'] = $request->all();
+                $user->update($request->all());
+                $data['msg'] = $user;
                 return response()->json($data, 200);
             }
         }
+        $data['error'] = false;
+        $user->update($request->all());
+        $data['msg'] = $user;
+        return response()->json($data, 200);
     }
 
     /**

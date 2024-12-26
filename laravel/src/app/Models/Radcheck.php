@@ -19,4 +19,5 @@ class Radcheck extends Model
     {
         return $query->where('radcheck.username', 'LIKE', "%$search%");
     }
+    
 }

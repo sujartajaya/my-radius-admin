@@ -20,6 +20,6 @@ class Userhotspot extends Model
 
     public function scopeSearch($query, $search)
     {
-        return $query->where('name', 'LIKE', "%$search%")->orWhere('email',"%$search%")->orWhere('username',"%$search%")->orWhere('address',"%$search%")->orWhere('department',"%$search%")->orWhere('phone',"%$search%");
+        return $query->where('name', 'LIKE', "%$search%")->orWhere('email','LIKE',"%$search%")->orWhere('username','LIKE',"%$search%")->orWhere('address','LIKE',"%$search%")->orWhere('department','LIKE',"%$search%")->orWhere('phone','LIKE',"%$search%");
     }
 }
