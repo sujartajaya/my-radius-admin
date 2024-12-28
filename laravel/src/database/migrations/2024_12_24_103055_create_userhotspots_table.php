@@ -20,8 +20,13 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('department');
             $table->string('phone');
-            $table->enum('time_limit',[true,false])->default(true);
-            $table->integer('time_over')->default(60);
+            //$table->enum('time_limit',[true,false])->default(true);
+            $table->integer('time_limit')->default(0);
+            $table->string('group')->nullable();
+            $table->string('rate_limit')->nullable();
+            $table->string('expire')->nullable();
+            $table->string('byte_limit')->nullable();
+            $table->integer('share_limit')->default(1);
             $table->timestamps();
         });
     }

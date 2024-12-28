@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Userhotspot;
+use App\Models\Mikrotik;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,10 +15,29 @@ class UserhotspotController extends Controller
     public function index(Request $request)
     {
         $userhotspots = Userhotspot::search($request->search)->paginate(8);
-        
-        //return json_encode($userhotspots);
+        $ip = env('MIKROTIK_IP');
+        $user = env('MIKROTIK_USER');
+        $password = env('MIKROTIK_PASSWORD');
+        $API = new Mikrotik();
+        $API->debug = false;
+        $data=[];
 
-        return view('hotspot.users',compact('userhotspots'));
+        if ($API->connect($ip, $user, $password)) {
+			$userprofile = $API->comm('/ip/hotspot/user/profile/print');
+            $data = [
+                'error' => false,
+                'title' => 'Hotspot User Profile',
+                'userprofile' => $userprofile,
+            ];
+		} else {
+            $data = [
+                'error' => true,
+                'title' => 'Hotspot User Profile',
+                'msg' => "Error when connect to mikrotik.",
+            ];
+		}
+
+        return view('hotspot.users',compact('userhotspots','data'));
     }
 
     /**

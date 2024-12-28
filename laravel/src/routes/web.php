@@ -59,7 +59,8 @@ Route::prefix('/test')->group(function () {
     Route::get('/modal1', function () {
         return view('test.modal1');
     });
-
+    Route::get('/dashboard',[MikrotikController::class,'system']);
+    
 });
 
 Route::middleware('auth')->prefix('/hotspot')->group(function () {

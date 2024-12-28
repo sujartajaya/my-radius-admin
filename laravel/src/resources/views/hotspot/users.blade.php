@@ -106,7 +106,7 @@
                             Edit
                             </button>
                             <button
-                            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400" onClick="openUserProfileModal('{{$user->username}}')"
                             >
                             Profile
                             </button>
@@ -417,9 +417,9 @@
       <div class="bg-white w-full max-w-4xl rounded-lg shadow-lg">
         <!-- Modal Header -->
         <div class="flex justify-between items-center px-6 py-4 border-b">
-          <h2 class="text-xl font-semibold text-gray-800">User Profile</h2>
+          <h2 class="text-xl font-semibold text-gray-800" id="userProfileInfo">User Profile ${username} </h2>
           <button
-            id="closeModalBtn"
+            id="userProfilecloseModalBtn"
             class="text-gray-600 hover:text-gray-800 focus:outline-none"
           >
             ✖
@@ -430,69 +430,36 @@
                               <form>
                               <div class="flex flex-wrap -mx-3 mb-4">
                                           <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="name">
-                                              Name
-                                          </label>
-                                          <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="name" type="text" placeholder="Your name" autofocus>
+                                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="userProfileGroup">
+                                                User Group
+                                            </label>
+                                            <select class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="userProfileGroup" type="checkbox">
+                                              @if (!$data['error'])
+                                              @foreach($data['userprofile'] as $userprof)
+                                              <option value="{{$userprof['name']}}">{{$userprof['name']}}</option>
+                                              @endforeach
+                                              @endif
+                                            </select>
                                           </div>
                                           <div class="w-full md:w-1/2 px-3">
-                                              <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="email">
-                                                  Email
+                                              <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="userProfileLimitRate">
+                                                  Limit Rate (1024K/1024K)
                                               </label>
-                                              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="email" type="email" placeholder="yorname@example.com">
+                                              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="userProfileLimitRate" type="text" placeholder="1024K/1024K 2M/2M 1024K/1024K 40/40">
                                           </div>
                               </div>
                               <div class="flex flex-wrap -mx-3 mb-4">
                                           <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="username">
-                                              Username
+                                          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="userProfileTimeLimit">
+                                              Time Limit (Minutes)
                                           </label>
-                                          <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="username" type="text" placeholder="Username">
+                                          <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="userProfileTimeLimit" type="number" placeholder="60">
                                           </div>
                                           <div class="w-full md:w-1/2 px-3">
-                                              <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="password">
-                                                  Password
+                                              <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="userProfileExpire">
+                                                  Expire User
                                               </label>
-                                              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="password" type="text" placeholder="******************">
-                                          </div>
-                              </div>
-                              <div class="flex flex-wrap -mx-3 mb-4">
-                                          <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="department">
-                                              Department
-                                          </label>
-                                          <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="department" type="text" placeholder="Department">
-                                          </div>
-                                          <div class="w-full md:w-1/2 px-3">
-                                              <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="phone">
-                                                  Phone
-                                              </label>
-                                              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="phone" type="phone">
-                                          </div>
-                              </div>
-                              <div class="flex flex-wrap -mx-3 mb-4">
-                                  <div class="w-full px-3">
-                                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="address">
-                                      Adress
-                                  </label>
-                                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="address" type="text" placeholder="Address">
-                                  </div>
-                              </div>
-                              <div class="flex flex-wrap -mx-3 mb-4">
-                                          <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="time_limit">
-                                              Time Limit
-                                          </label>
-                                          <select class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="time_limit" type="checkbox">
-                                              <option value="0">False</option>
-                                              <option value="1" selected>True</option>
-                                          </select>
-                                          </div>
-                                          <div class="w-full md:w-1/2 px-3">
-                                              <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="time_over">
-                                                  Time Over (minutes)
-                                              </label>
-                                              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="time_over" type="number" value="60">
+                                              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="userProfileExpire" type="date">
                                           </div>
                               </div>
                               </form>
@@ -501,17 +468,32 @@
         <!-- Modal Footer -->
         <div class="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b space-x-2">
           <button
-            id="closeFooterBtn"
+            id="userProfilecloseFooterBtn"
             class="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
           >
             Close
           </button>
-          <button id="saveFooterBtn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">
+          <button id="userProfilesaveFooterBtn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">
           Save
           </button>
         </div>
       </div>
     </div>
     <!-- End Modal -->
+     <script>
+        const userprofilemodal = document.getElementById('userProfileModal');
+        const userprofilesavefooterbtn = document.getElementById('userProfilesaveFooterBtn');
+        const userprofileclosefooterbtn = document.getElementById('userProfilecloseFooterBtn');
+        const userProfileInfo = document.getElementById('userProfileInfo');
+
+        function openUserProfileModal(user) {
+            userProfileInfo.innerHTML = `User Profile ${user}`;
+            userprofilemodal.classList.remove('hidden');
+        }
+
+        userprofileclosefooterbtn.addEventListener('click', () => {
+            userprofilemodal.classList.add('hidden');
+        });
+     </script>
     @endsection
 

@@ -65,34 +65,41 @@ class MikrotikController extends Controller
 
     public function system()
     {
-        $ip = '172.16.0.12';
-        $user = 'putu';
-        $password = 'v3l088';
+        $ip = env('MIKROTIK_IP');
+        $user = env('MIKROTIK_USER');
+        $password = env('MIKROTIK_PASSWORD');
         $API = new Mikrotik();
         $API->debug = false;
-
+        $data = [];
         if ($API->connect($ip, $user, $password)) {
 
-			$hotspotactive = $API->comm('/ip/hotspot/active/print');
+			$system = $API->comm('/system/resource/print');
 
             $data = [
-                'menu' => 'Hotspot',
-                'totalhotspotactive' => count($hotspotactive),
-                'hotspotactive' => $hotspotactive,
+                'error' => false,
+                'title' => 'System Resource',
+                'system' => $system,
             ];
-
-            return response()->json($data);
+            return view('admin.dashboardv1',compact('data'));
+            //dd($data);
+            //return response()->json($data);
 
 		} else {
-            return respone()->json("Gagal Konek");
+            $data = [
+                'error' => true,
+                'title' => 'System Resource',
+                'msg' => 'Error connect to mikrotik',
+            ];
+            return view('admin.dashboardv1',compact('data'));
+            //return respone()->json("Gagal Konek");
 		}
     }
 
     public function hotspot_user_profile()
     {
-        $ip = '172.16.0.12';
-        $user = 'putu';
-        $password = 'v3l088';
+        $ip = env('MIKROTIK_IP');
+        $user = env('MIKROTIK_USER');
+        $password = env('MIKROTIK_PASSWORD');
         $API = new Mikrotik();
         $API->debug = false;
 
@@ -111,4 +118,6 @@ class MikrotikController extends Controller
             return respone()->json("Gagal Konek");
 		}
     }
+
+
 }
