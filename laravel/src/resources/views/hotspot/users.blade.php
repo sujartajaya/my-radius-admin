@@ -21,8 +21,6 @@
                 const department = document.getElementById('department');
                 const phone = document.getElementById('phone');
                 const address = document.getElementById('address');
-                const time_limit = document.getElementById('time_limit');
-                const time_over = document.getElementById('time_over');
                 name.value = response.data.name;
                 email.value = response.data.email;
                 username.value = response.data.username;
@@ -30,12 +28,6 @@
                 department.value = response.data.department;
                 phone.value = response.data.phone;
                 address.value = response.data.address;
-                if (response.data.time_limit) {
-                  time_limit.value = response.data.time_limit;
-                } else {
-                  time_limit.value = 0;
-                }
-                time_over.value = response.data.time_over;
             })
             .catch(err => {
             console.log('Oh noooo!!');
@@ -106,7 +98,7 @@
                             Edit
                             </button>
                             <button
-                            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400" onClick="openUserProfileModal('{{$user->username}}')"
+                            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400" onClick="openUserProfileModal({{$user->id}})"
                             >
                             Profile
                             </button>
@@ -199,23 +191,6 @@
                                   <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="address" type="text" placeholder="Address">
                                   </div>
                               </div>
-                              <div class="flex flex-wrap -mx-3 mb-4">
-                                          <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="time_limit">
-                                              Time Limit
-                                          </label>
-                                          <select class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="time_limit" type="checkbox">
-                                              <option value="0">False</option>
-                                              <option value="1" selected>True</option>
-                                          </select>
-                                          </div>
-                                          <div class="w-full md:w-1/2 px-3">
-                                              <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="time_over">
-                                                  Time Over (minutes)
-                                              </label>
-                                              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="time_over" type="number" value="60">
-                                          </div>
-                              </div>
                               </form>
 
         </div>
@@ -268,9 +243,8 @@
         department.value = "";
         phone.value = "";
         address.value = "";
-        time_limit.value = 1;
-        time_over.value = 60;
         modal.classList.remove('hidden');
+        //alert(last_page);
       });
 
       saveFooterBtn.addEventListener('click', () => {
@@ -282,8 +256,8 @@
           const department = document.getElementById('department');
           const phone = document.getElementById('phone');
           const address = document.getElementById('address');
-          const time_limit = document.getElementById('time_limit');
-          const time_over = document.getElementById('time_over');
+          // const time_limit = document.getElementById('time_limit');
+          // const time_over = document.getElementById('time_over');
           if (editdata == false) {
           axios
             .post("<?php echo env('APP_URL'); ?>:8000/hotspot/user",{
@@ -294,8 +268,8 @@
                               'department' : department.value,
                               'phone' : phone.value,
                               'address' : address.value,
-                              'time_limit' : time_limit.value,
-                              'time_over' : time_over.value
+                              // 'time_limit' : time_limit.value,
+                              // 'time_over' : time_over.value
                           },{
                               headers: {
                                   'Content-Type': 'multipart/form-data'
@@ -336,6 +310,7 @@
                                   let sisa = data_table % per_page;
 
                                   if (sisa == 0) {
+                                    if (last_page > 1)
                                     last_page = last_page + 1;
                                     location.replace(url_base+"?page="+last_page); 
                                   } else {
@@ -346,7 +321,7 @@
             )
             .catch(err => {
               console.log('Oh noooo!!');
-              console.log(err);
+              console.log(err.response.data);
             })
           } else {
             axios
@@ -358,8 +333,8 @@
                               'department' : department.value,
                               'phone' : phone.value,
                               'address' : address.value,
-                              'time_limit' : time_limit.value,
-                              'time_over' : time_over.value
+                              // 'time_limit' : time_limit.value,
+                              // 'time_over' : time_over.value
                           }
               )
               .then((response) => {
@@ -389,7 +364,7 @@
               )
               .catch(err => {
                 console.log('Oh noooo!!');
-                console.log(err);
+                console.log(err.response.data);
               })
           }
 
@@ -417,7 +392,7 @@
       <div class="bg-white w-full max-w-4xl rounded-lg shadow-lg">
         <!-- Modal Header -->
         <div class="flex justify-between items-center px-6 py-4 border-b">
-          <h2 class="text-xl font-semibold text-gray-800" id="userProfileInfo">User Profile ${username} </h2>
+          <h2 class="text-xl font-semibold text-gray-800" id="userProfileInfo"></h2>
           <button
             id="userProfilecloseModalBtn"
             class="text-gray-600 hover:text-gray-800 focus:outline-none"
@@ -431,7 +406,7 @@
                               <div class="flex flex-wrap -mx-3 mb-4">
                                           <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                                             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="userProfileGroup">
-                                                User Group
+                                                User Profile
                                             </label>
                                             <select class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="userProfileGroup" type="checkbox">
                                               @if (!$data['error'])
@@ -459,7 +434,7 @@
                                               <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="userProfileExpire">
                                                   Expire User
                                               </label>
-                                              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="userProfileExpire" type="date">
+                                              <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="userProfileExpire" type="datetime-local">
                                           </div>
                               </div>
                               </form>
@@ -485,15 +460,42 @@
         const userprofilesavefooterbtn = document.getElementById('userProfilesaveFooterBtn');
         const userprofileclosefooterbtn = document.getElementById('userProfilecloseFooterBtn');
         const userProfileInfo = document.getElementById('userProfileInfo');
-
-        function openUserProfileModal(user) {
-            userProfileInfo.innerHTML = `User Profile ${user}`;
+        const userProfileGroup = document.getElementById('userProfileGroup');
+        const userProfileLimitRate = document.getElementById('userProfileLimitRate');
+        const userProfileTimeLimit = document.getElementById('userProfileTimeLimit');
+        const userProfileExpire = document.getElementById('userProfileExpire');
+        function openUserProfileModal(id) {
+            axios
+              .get(
+                "<?php echo env('APP_URL'); ?>:8000/hotspot/user/"+id
+              )
+              .then((response) => {
+                  userProfileInfo.innerHTML = `User Profile ${response.data.name}`;
+                  userProfileGroup.value = response.data.user_profile;
+                  userProfileLimitRate.value = response.data.rate_limit;
+                  userProfileTimeLimit.value = response.data.time_limit;
+                  userProfileExpire.value = response.data.expire;
+              })
+            
             userprofilemodal.classList.remove('hidden');
         }
 
         userprofileclosefooterbtn.addEventListener('click', () => {
             userprofilemodal.classList.add('hidden');
         });
+
+        userProfilesaveFooterBtn.addEventListener('click',() =>{
+          axios
+            .patch("<?php echo env('APP_URL'); ?>:8000/hotspot/user/profile/"+id,{
+                'user_profile' : userProfileGroup.value,
+                'rate_limit'   : userProfileLimitRate.value,
+                'time_limit'   : userProfileTimeLimit.value,
+                'expire'       : userProfileExpire.value
+            })
+            .then(
+
+            )
+        })
      </script>
     @endsection
 

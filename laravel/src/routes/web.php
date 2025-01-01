@@ -8,6 +8,7 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserhotspotController;
 use App\Http\Controllers\MikrotikController;
+use App\Http\Controllers\RadreplyController;
 
 Route::get('/', [UserController::class,'index']);
 Route::get('/home', [AdminController::class,'index']);
@@ -63,13 +64,16 @@ Route::prefix('/test')->group(function () {
     
 });
 
-Route::middleware('auth')->prefix('/hotspot')->group(function () {
+Route::prefix('/hotspot')->group(function () {
     Route::get('/users',[UserhotspotController::class,'index']); /** blade */
     Route::post('/user',[UserhotspotController::class,'store']); /** api */
     Route::get('/user/{id}',[UserhotspotController::class,'edit']); /** api */
     Route::patch('/user/{id}',[UserhotspotController::class,'update']); /** api */
+    Route::patch('/user/profile/{id}',[UserhotspotController::class,'userprofile']); /** api */
+
     Route::get('/login/user',[WebloginController::class,'getAllUsers']);
     Route::get('/user/create',[WebloginController::class,'create']);
+    Route::post('/radreply',[RadreplyController::class,'store']);
 });
 
 Route::middleware('auth')->prefix('/mikrotik')->group(function () {

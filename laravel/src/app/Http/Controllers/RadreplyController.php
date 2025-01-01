@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Radreply;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RadreplyController extends Controller
 {
@@ -28,7 +29,41 @@ class RadreplyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'username' => ['required'],
+            'user_profile' => ['required'],
+        ]);
+
+        $data = [];
+
+        if($validator->fails()){
+            $data['error'] = true;
+            $data['msg'] = $validator->messages();
+            return response()->json($data, 200);
+        } else {
+            $data['error'] = false;
+            
+            $radreply =[ 
+                [
+                    'username' => $request->username,
+                    'attribute' => 'Mikrotik-Group',
+                    'op' => ':=',
+                    'value' => $request->user_profile
+                ]
+            ];
+            if ($request->rate_limit) {
+                array_push($radreply,[
+                    'username' => $request->username,
+                    'attribute' => 'Mikrotik-Rate-Limit',
+                    'op' => ':=',
+                    'value' => $request->rate_limit
+                ]);
+            }
+            $savedata = Radreply::insert($radreply);
+
+            $data['msg'] = $savedata;
+            return response()->json($data, 200);
+        }
     }
 
     /**

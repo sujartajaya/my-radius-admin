@@ -62,6 +62,7 @@ class UserhotspotController extends Controller
         ]);
 
         $data = [];
+        
         if($validator->fails()){
             $data['error'] = true;
             $data['msg'] = $validator->messages();
@@ -145,5 +146,20 @@ class UserhotspotController extends Controller
     public function destroy(Userhotspot $userhotspot)
     {
         //
+    }
+
+    public function userprofile(Userhotspot $userhotspot, $id)
+    {
+        $user = Userhotspot::find($id);
+        $update = $user->update($request->all());
+        if ($update) {
+            $data['error'] = false;
+            $data['msg'] = 'User Profile Updated';
+            return respose()->json($data,200);
+        } else {
+            $data['error'] = true;
+            $data['msg'] = 'Some error when updated';
+            return respose()->json($data,200);
+        }
     }
 }

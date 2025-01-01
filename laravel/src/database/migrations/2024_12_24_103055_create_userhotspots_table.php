@@ -22,11 +22,12 @@ return new class extends Migration
             $table->string('phone');
             //$table->enum('time_limit',[true,false])->default(true);
             $table->integer('time_limit')->default(0);
-            $table->string('group')->nullable();
             $table->string('rate_limit')->nullable();
-            $table->string('expire')->nullable();
+            $table->datetime('expire')->nullable();
             $table->string('byte_limit')->nullable();
             $table->integer('share_limit')->default(1);
+            $table->string('user_profile')->nullable();
+            $table->string('user_group')->nullable();
             $table->timestamps();
         });
     }
