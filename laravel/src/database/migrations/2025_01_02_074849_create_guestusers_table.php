@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('userhotspots', function (Blueprint $table) {
+        Schema::create('guestusers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('username')->unique();
+            $table->string('email');
+            $table->string('username');
             $table->string('password');
+            $table->string('phone')->nullable();
             $table->text('address')->nullable();
-            $table->string('department');
-            $table->string('phone');
-            //$table->enum('time_limit',[true,false])->default(true);
             $table->integer('time_limit')->nullable();
             $table->string('rate_limit')->nullable();
             $table->datetime('expire')->nullable();
@@ -37,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('userhotspots');
+        Schema::dropIfExists('guestusers');
     }
 };

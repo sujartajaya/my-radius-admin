@@ -15,7 +15,7 @@
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawChart);
         google.charts.setOnLoadCallback(cpuChart);
-        google.charts.setOnLoadCallback(hddChart);
+        //google.charts.setOnLoadCallback(hddChart);
 
 
         function drawChart() {
@@ -62,6 +62,10 @@
             // Draw
             const chart = new google.visualization.PieChart(document.getElementById('cpu'));
             chart.draw(data, options);
+        }
+
+        function hddChart() {
+
         }
         </script>
     </div>    

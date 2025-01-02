@@ -23,7 +23,7 @@
             function checkEmail() {
                 let email = document.getElementById('email');
                     axios
-                        .post("http://192.168.15.254:8000/web/api/logmail",{
+                        .post("<?php echo env('APP_URL'); ?>:8000/web/api/logmail",{
                             'email' : email.value
                         },{
                             headers: {
@@ -34,7 +34,7 @@
                             console.log(response.data);
                             const data = response.data;
                             if (data['error']) {
-                                alert(data['data']);
+                                //alert(data['data']);
                                 document.getElementById("error").innerHTML = data['data'];
                             } else {
                                 /** Kode untuk langsung login */

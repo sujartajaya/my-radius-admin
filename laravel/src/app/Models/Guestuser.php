@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Userhotspot extends Model
+class Guestuser extends Model
 {
-   protected $fillable = [
+    protected $fillable = [
         'name',
         'email',
         'username',
         'password',
         'address',
-        'department',
         'phone',
         'time_limit',
         'rate_limit',
@@ -25,6 +24,6 @@ class Userhotspot extends Model
 
     public function scopeSearch($query, $search)
     {
-        return $query->where('name', 'LIKE', "%$search%")->orWhere('email','LIKE',"%$search%")->orWhere('username','LIKE',"%$search%")->orWhere('address','LIKE',"%$search%")->orWhere('department','LIKE',"%$search%")->orWhere('phone','LIKE',"%$search%");
+        return $query->where('name', 'LIKE', "%$search%")->orWhere('email','LIKE',"%$search%")->orWhere('username','LIKE',"%$search%")->orWhere('address','LIKE',"%$search%")->orWhere('phone','LIKE',"%$search%");
     }
 }

@@ -80,7 +80,8 @@ class MikrotikController extends Controller
                 'title' => 'System Resource',
                 'system' => $system,
             ];
-            return view('admin.dashboardv1',compact('data'));
+            //dd($data);
+            return view('admin.dashboardv2',compact('data'));
             //dd($data);
             //return response()->json($data);
 
@@ -90,7 +91,8 @@ class MikrotikController extends Controller
                 'title' => 'System Resource',
                 'msg' => 'Error connect to mikrotik',
             ];
-            return view('admin.dashboardv1',compact('data'));
+            
+            return view('admin.dashboardv2',compact('data'));
             //return respone()->json("Gagal Konek");
 		}
     }

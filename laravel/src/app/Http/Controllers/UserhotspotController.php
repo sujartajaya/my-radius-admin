@@ -152,6 +152,7 @@ class UserhotspotController extends Controller
     {
         $user = Userhotspot::find($id);
         $update = $user->update($request->all());
+        
         if ($update) {
             $data['error'] = false;
             $data['msg'] = 'User Profile Updated';

@@ -36,11 +36,15 @@ class UserController extends Controller
         $credentials = $request->validate([
             'name' => ['required'],
             'email' => ['required', 'email:dns','unique:users'],
+            'username' => ['required', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'same:confirm_password'],
             'confirm_password' => ['min:8']
         ]);
         $credentials['password'] = bcrypt($credentials['password']);
+        //dd($credentials);
+       
         $user = User::create($credentials);
+    
         if ($user) {
             return redirect('/');
         }
@@ -85,7 +89,7 @@ class UserController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email:dns'],
+            'username' => ['required'],
             'password' => ['required'],
         ]);
 

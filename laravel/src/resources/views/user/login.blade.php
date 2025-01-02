@@ -13,9 +13,9 @@
                     <form class="space-y-4 md:space-y-6" action="/login" method="post">
                         @csrf
                         <div>
-                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
-                            <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="name@company.com" required="" autofocus value="{{ old('email') }}">
-                            @error('email')
+                            <label for="username" class="block mb-2 text-sm font-medium text-gray-900">Your username</label>
+                            <input type="text" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="username" required="" autofocus value="{{ old('username') }}">
+                            @error('username')
                             <div class="invalid block text-sm font-medium text-gray-700 dark:text-red-600 mb-2">{{$message}}</div>
                             @enderror
                         </div>

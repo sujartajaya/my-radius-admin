@@ -1,19 +1,18 @@
 services:
-
   mysql:
     image: mysql:8.0
     container_name: mysql-container-01
-  #  working_dir: /home
+    #  working_dir: /home
     volumes:
-  #    - ./mysql/dbconfig:/home
+      #    - ./mysql/dbconfig:/home
       - ./mysql/data:/var/lib/mysql
     environment:
-      TZ: 'Asia/Makassar'
+      TZ: "Asia/Makassar"
       MYSQL_ROOT_PASSWORD: password
     restart: unless-stopped
     networks:
       - localnet
-    
+
   freeradius:
     build:
       context: ./
@@ -31,19 +30,19 @@ services:
     environment:
       - TZ=Asia/Makassar
     networks:
-        - localnet
+      - localnet
 
   phpmyadmin:
-      image: phpmyadmin
-      container_name: my-phpmyadmin-container-01
-      restart: always
-      ports:
-        - 8080:80
-      environment:
-        - PMA_HOST=mysql
-        - TZ=Asia/Makassar
-      networks:
-        - localnet
+    image: phpmyadmin
+    container_name: my-phpmyadmin-container-01
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=mysql
+      - TZ=Asia/Makassar
+    networks:
+      - localnet
 
   radtest:
     build: ./radtest
@@ -52,9 +51,8 @@ services:
       - freeradius
     restart: always
     networks:
-        - localnet
+      - localnet
     tty: true
-
 
   php:
     build:
@@ -74,7 +72,7 @@ services:
       DB_NAME: radius
       DB_PORT: 3306
       DB_CONNECTION_LIMIT: 10
-      TZ: 'Asia/Makassar'
+      TZ: "Asia/Makassar"
     volumes:
       - ./laravel/src:/var/www
       - ./nginx:/etc/nginx/conf.d/

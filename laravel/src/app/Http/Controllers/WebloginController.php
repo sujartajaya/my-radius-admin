@@ -79,6 +79,9 @@ class WebloginController extends Controller
         $pattern = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
         $email = $request->email;
         $pesan = [];
+        $waktu = new DateTime();
+        $waktu1 = $waktu->modify("+360 minutes");
+        $expiration = $waktu1->format('d M Y H:i:s');
         /** cek format email */
         if (preg_match($pattern, $email)) {
             /** cek domain email */
@@ -93,11 +96,6 @@ class WebloginController extends Controller
                         "value" => $email
                     ];
                     $addemail = DB::table('radcheck')->insert($data);
-                   
-                    $waktu = new DateTime();
-                    $waktu1 = $waktu->modify("+360 minutes");
-                    $expiration = $waktu1->format('d M Y H:i:s');
-
                     $data = [
                         "username" => $email,
                         "attribute" => "Expiration",
@@ -114,30 +112,46 @@ class WebloginController extends Controller
 
                     if ($addemail) {
                         $pesan['error'] = false;
-                        $pesan['data'] = "Email sudah ditambahkan bisa langsung konek";
+                        $pesan['data'] = "New email add!";
                         $pesan['email'] = $email;
                         return json_encode($pesan);
                     } else {
                         $pesan['error'] = true;
-                        $pesan['data'] = 'Ada kesalahan pada database';
+                        $pesan['data'] = 'Database error!';
                         $pesan['email'] = $email;
                         return json_encode($pesan);
                     }
                 }  else {
                     if ($emaildb->count() > 1) {
                         $expire = $emaildb[1]->value;
+                        /** check if date expire == today */
                         $today = new DateTime();
+
+                        $check_expire = new DateTime($expire);    
+                        $check_expire = $check_expire->format('Y-m-d');
+                        $check_today = $today->format('Y-m-d');
+
                         $tgl = $today->format('d M Y H:i:s');
                         $tgl_expire = strtotime($expire);
                         $tgl_sekarang = strtotime($tgl);
 
-                        if ($tgl_expire < $tgl_sekarang) {
-                            $pesan['data'] = 'Email login anda telah expired!';
+                        if (($tgl_expire < $tgl_sekarang) && ($check_expire == $check_today)) {
+                            $pesan['data'] = 'Your internet usage time has run out, please try again tomorrow!';
                             $pesan['error'] = true;
+                            $pesan['email'] = $emaildb;
+                            return json_encode($pesan);
+                        }
+                        if (($check_expire != $check_today) && ($tgl_expire < $tgl_sekarang)) {
+                            /** reset expire */
+                            $radcheck = DB::table('radcheck')->where('username',$email)->where('attribute','Expiration')->update(['value' => $expiration]);
+                            
+                            $pesan['data'] = 'Your email can still login!';
+                            $pesan['error'] = false;
                         } else {
-                            $pesan['data'] = 'Email login anda masih berlaku!';
+                            $pesan['data'] = 'Your email can still login!';
                             $pesan['error'] = false;
                         }
+
                         $pesan['email'] = $emaildb;
 
                         return json_encode($pesan);
@@ -145,18 +159,19 @@ class WebloginController extends Controller
                         $pesan['data'] = 'Email khusus member!';
                         $pesan['error'] = false;
                         $pesan['email'] = $emaildb;
+
                         return json_encode($pesan);
                     }
                 }
             } else {
                 $pesan['error'] = true;
-                $pesan['data'] = "Your email not valid";
+                $pesan['data'] = "Your email not valid!";
                 $pesan['email'] = $email;
                 return json_encode($pesan);
             }
         } else {
             $pesan['error'] = true;
-            $pesan['data'] = "Your email not valid";
+            $pesan['data'] = "Your email not valid!";
             $pesan['email'] = $email;
             return json_encode($pesan);
         }

@@ -18,9 +18,9 @@
   <!-- Modal -->
   <div
     id="largeModal"
-    class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden"
+    class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center"
   >
-    <div class="bg-white w-full max-w-4xl rounded-lg shadow-lg">
+    <div class="bg-white w-full max-w-6xl rounded-lg shadow-lg">
       <!-- Modal Header -->
       <div class="flex justify-between items-center px-6 py-4 border-b">
         <h2 class="text-xl font-semibold text-gray-800">Add new user</h2>

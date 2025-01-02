@@ -9,8 +9,11 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserhotspotController;
 use App\Http\Controllers\MikrotikController;
 use App\Http\Controllers\RadreplyController;
+use App\Http\Controllers\RadgroupreplyController;
 
-Route::get('/', [UserController::class,'index']);
+//Route::get('/', [UserController::class,'index']);
+Route::get('/', [MikrotikController::class,'system']);
+
 Route::get('/home', [AdminController::class,'index']);
 Route::get('/login', [UserController::class,'index']);
 Route::get('/user/register',[UserController::class,'registeruser']);
@@ -23,8 +26,8 @@ Route::prefix('/web')->group(function () {
     Route::get('/api/test',[WebloginController::class,'testlogin']);
     Route::get('/api/users',[WebloginController::class,'getAllUsers']);
     Route::post('/api/logmail',[WebloginController::class,'loginemail']);
-    //Route::post('/login',[WebloginController::class,'reqlogin']); /** login hotspot */
-    Route::post('/login',[TestController::class,'loginv2']);
+    Route::post('/login',[WebloginController::class,'reqlogin']); /** login hotspot */
+    //Route::post('/login',[TestController::class,'loginv2']);
 
 });
 
@@ -64,20 +67,25 @@ Route::prefix('/test')->group(function () {
     
 });
 
-Route::prefix('/hotspot')->group(function () {
+Route::middleware('auth')->prefix('/hotspot')->group(function () {
     Route::get('/users',[UserhotspotController::class,'index']); /** blade */
     Route::post('/user',[UserhotspotController::class,'store']); /** api */
     Route::get('/user/{id}',[UserhotspotController::class,'edit']); /** api */
     Route::patch('/user/{id}',[UserhotspotController::class,'update']); /** api */
     Route::patch('/user/profile/{id}',[UserhotspotController::class,'userprofile']); /** api */
-
+    Route::get('/guests',[GuestuserController::class,'index']);
     Route::get('/login/user',[WebloginController::class,'getAllUsers']);
     Route::get('/user/create',[WebloginController::class,'create']);
     Route::post('/radreply',[RadreplyController::class,'store']);
+    Route::get('/usergroup',[RadgroupreplyController::class,'show']);
+
 });
 
 Route::middleware('auth')->prefix('/mikrotik')->group(function () {
-    Route::get('/system',[MikrotikController::class,'system']); /** api */
+    Route::get('/system',[MikrotikController::class,'system']);
     Route::get('/userprofile',[MikrotikController::class,'hotspot_user_profile']); /** api */
+    Route::get('/profile',function() {
+        return view('admin.dashboardv2');
+    });
 });
 
