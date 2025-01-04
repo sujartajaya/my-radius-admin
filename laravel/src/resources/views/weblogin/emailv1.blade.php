@@ -23,27 +23,8 @@
             function checkEmail() {
                 let email = document.getElementById('email');
                     axios
-                        .post("<?php echo env('APP_URL'); ?>:8000/web/api/logmail",{
-                            'email' : email.value
-                        },{
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        })
-                        .then ((response) => {
-                            console.log(response.data);
-                            const data = response.data;
-                            if (data['error']) {
-                                //alert(data['data']);
-                                document.getElementById("error").innerHTML = data['data'];
-                            } else {
-                                /** Kode untuk langsung login */
-                                doLogin(email.value);
-                                //document.getElementById("error").innerHTML = data['data'];
-                            }
-                            //const data = response.data;
-                            //username.value = data[0].username                        
-                        })                        
+                        .post("<?php echo env('LOGIN_URL'); ?>:8000/web/api/logmail",{'email' : email.value},{headers: {'Content-Type': 'multipart/form-data'}})
+                        .then ((response) => {console.log(response.data);const data = response.data;if (data['error']) {document.getElementById("error").innerHTML = data['data'];} else {doLogin(email.value);}})                        
             }
         </script>
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0 mt-10">

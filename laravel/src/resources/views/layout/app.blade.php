@@ -11,7 +11,7 @@
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
     <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
         <img src="/logo.png" class="h-8" alt="Logo" />
-        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Data Link - Hotspot User Management</span>
+        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Media Link - GHM</span>
     </a>
     <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
         <span class="sr-only">Open main menu</span>
@@ -41,7 +41,7 @@
                       <div
                           class="absolute left-0 w-40 mt-1 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                           <div class="py-1">
-                              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">User Lists</a>
+                              <a href="/hotspot/guest/users" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">User Lists</a>
                               <a href="/hotspot/usergroup" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">User Group</a>
                               <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">User Connection</a>
                           </div>

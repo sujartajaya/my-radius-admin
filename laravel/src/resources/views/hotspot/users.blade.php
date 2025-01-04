@@ -35,7 +35,7 @@
           });
         modal.classList.remove('hidden');
         
-    }
+      }
     </script>
     <div class="max-w w-full">
         <div class="flex flex-col items-center justify-center px-3 py-8 mx-auto lg:py-0 mt-1">
@@ -237,7 +237,7 @@
         const time_limit = document.getElementById('time_limit');
         const time_over = document.getElementById('time_over');
         name.value = "";
-        email.value = ""
+        email.value = "";
         username.value = "";
         password.value = "";
         department.value = "";

@@ -10,6 +10,7 @@ use App\Http\Controllers\UserhotspotController;
 use App\Http\Controllers\MikrotikController;
 use App\Http\Controllers\RadreplyController;
 use App\Http\Controllers\RadgroupreplyController;
+use App\Http\Controllers\GuestuserController;
 
 //Route::get('/', [UserController::class,'index']);
 Route::get('/', [MikrotikController::class,'system']);
@@ -73,7 +74,10 @@ Route::middleware('auth')->prefix('/hotspot')->group(function () {
     Route::get('/user/{id}',[UserhotspotController::class,'edit']); /** api */
     Route::patch('/user/{id}',[UserhotspotController::class,'update']); /** api */
     Route::patch('/user/profile/{id}',[UserhotspotController::class,'userprofile']); /** api */
-    Route::get('/guests',[GuestuserController::class,'index']);
+    Route::get('/guest/users',[GuestuserController::class,'index']); /** blade */
+    Route::post('/guest/user',[GuestuserController::class,'store']); /** API */
+    Route::get('/guest/user/{id}',[GuestuserController::class,'edit']); /** API */
+    Route::patch('/guest/user/{id}',[GuestuserController::class,'update']); /** api */
     Route::get('/login/user',[WebloginController::class,'getAllUsers']);
     Route::get('/user/create',[WebloginController::class,'create']);
     Route::post('/radreply',[RadreplyController::class,'store']);
