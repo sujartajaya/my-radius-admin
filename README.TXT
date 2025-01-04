@@ -351,3 +351,15 @@ DELIMITER ;
 ========================================================
 SELECT username, SUM(acctinputoctets)/1000/1000/1000 as GB_in, SUM(acctoutputoctets)/1000/1000/1000 GB_out FROM radacct WHERE acctstarttime LIKE '2024-%' AND acctstoptime IS NOT NULL GROUP BY username;
 =========================================================
+
+
+=============================
+validasi mac-add javascript
+=============================
+function isValidMacAddress(macAddress) {
+  // Pola regex untuk MAC address yang valid
+  const pattern = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+
+  // Validasi menggunakan regex
+  return pattern.test(macAddress);
+}

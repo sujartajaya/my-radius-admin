@@ -143,4 +143,24 @@ class GuestuserController extends Controller
     {
         //
     }
+
+    public function update_profile(Guestuser $guestuser, Request $request, $id)
+    {
+        $user = $guestuser->find($id);
+        $validator = Validator::make($request->all(), [
+                'user_profile' => ['required'],
+                'rate_limit' => ['required'],
+                'time_limit' => ['required'],
+        ]);
+        if($validator->fails()){
+            $data['error'] = true;
+            $data['msg'] = $validator->messages();
+            return response()->json($data,200);
+        } else {
+            $user->update($request->all());
+            $data['error'] = false;
+            $data['msg'] = $user;
+            return response()->json($data,200);
+        }
+    }
 }

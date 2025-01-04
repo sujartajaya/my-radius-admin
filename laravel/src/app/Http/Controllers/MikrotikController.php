@@ -121,5 +121,54 @@ class MikrotikController extends Controller
 		}
     }
 
+    public function show_mac_binding($code)
+    {
+        $ip = env('MIKROTIK_IP');
+        $user = env('MIKROTIK_USER');
+        $password = env('MIKROTIK_PASSWORD');
+        $API = new Mikrotik();
+        $API->debug = false;
+
+        if ($API->connect($ip, $user, $password)) {
+
+			$mac = $API->comm('/ip/hotspot/ip-binding/print');
+
+            $data = [
+                'error' => false,
+                'title' => 'Hotspot Mac Address Bindings',
+                'mac' => $mac,
+            ];
+            if ($code == "blade") {
+                return view('hotspot.mac',compact('data'));
+            } else {
+                return response()->json($data,200);
+            }
+
+		} else {
+            $data = [
+                'error' => true,
+                'title' => 'Hotspot Mac Address Bindings',
+                'msg' => 'Error while fetch of data!',
+            ];
+            if ($code == "blade") {
+                return view('hotspot.mac',compact('data'));
+            } else {
+                return response()->json($data,200);
+            }
+		}
+    }
+
+    function isValidMacAddress($macAddress) {
+        // Pola regex untuk MAC address yang valid
+        $pattern = '/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/';
+
+        // Validasi menggunakan preg_match
+        if (preg_match($pattern, $macAddress)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 }

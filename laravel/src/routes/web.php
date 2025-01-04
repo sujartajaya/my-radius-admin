@@ -61,8 +61,8 @@ Route::prefix('/test')->group(function () {
     Route::post('/loginv2',[TestController::class,'loginv2']);
     Route::get('/modal',[WebloginController::class,'viewModal']);
     Route::get('/users/{username}',[WebloginController::class,'showUser']);
-    Route::get('/modal1', function () {
-        return view('test.modal1');
+    Route::get('/table', function () {
+        return view('test.tab5');
     });
     Route::get('/dashboard',[MikrotikController::class,'system']);
     
@@ -77,7 +77,9 @@ Route::middleware('auth')->prefix('/hotspot')->group(function () {
     Route::get('/guest/users',[GuestuserController::class,'index']); /** blade */
     Route::post('/guest/user',[GuestuserController::class,'store']); /** API */
     Route::get('/guest/user/{id}',[GuestuserController::class,'edit']); /** API */
+    Route::patch('/guest/profile/{id}',[GuestuserController::class,'update_profile']); /** api */
     Route::patch('/guest/user/{id}',[GuestuserController::class,'update']); /** api */
+    Route::get('/mac/{code}', [MikrotikController::class,'show_mac_binding']);/** blade || api*/
     Route::get('/login/user',[WebloginController::class,'getAllUsers']);
     Route::get('/user/create',[WebloginController::class,'create']);
     Route::post('/radreply',[RadreplyController::class,'store']);

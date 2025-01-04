@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   @vite('resources/css/app.css')
+  @yield('mystyle')
 </head>
 <body class="w-screen overflow-y-auto overflow-x-hidden" style="background: #ccf5ff;">
 
@@ -24,6 +25,30 @@
         @if(Auth::check())
         <li>
           <a href="/" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-red-700 md:p-0 dark:text-white md:dark:hover:text-red-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Home</a>
+        </li>
+        <li>
+              <div class="relative inline-block text-left">
+                  <div class="group">
+                      <button type="button"
+                          class="inline-flex justify-center items-center w-full px-4 py-2 text-sm font-medium text-white bg-red-800 hover:bg-red-700 focus:outline-none focus:bg-red-700">
+                          Options
+                          <!-- Dropdown arrow -->
+                          <svg class="w-4 h-4 ml-2 -mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 12l-5-5h10l-5 5z" />
+                          </svg>
+                      </button>
+
+                      <!-- Dropdown menu -->
+                      <div
+                          class="absolute left-0 w-40 mt-1 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
+                          <div class="py-1">
+                              <a href="/hotspot/mac/blade" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mac Add Binding</a>
+                              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login Email Profile</a>
+                              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Kill User</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
         </li>
         <li>
               <div class="relative inline-block text-left">

@@ -17,7 +17,7 @@
                     <div class="flex flex-col px-3 py-8 mx-auto lg:py-0 mt-1 items-center justify-center">
                             <div class="w-full max-w-sm min-w-[200px] relative">
                             <div class="relative">
-                                <form action="/hotspot/guests" method="GET">
+                                <form action="/hotspot/guest/users" method="GET">
                                 <input name="search"
                                 class="bg-white w-full pr-11 h-10 pl-3 py-2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded transition duration-200 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md"
                                 placeholder="Search ...."
@@ -280,9 +280,10 @@
             const userProfileTimeLimit = document.getElementById('userProfileTimeLimit');
             const userProfileExpire = document.getElementById('userProfileExpire');
             function openUserProfileModal(id) {
+                iduser = id;
                 axios
                 .get(
-                    "<?php echo env('APP_URL'); ?>:8000/hotspot/user/"+id
+                    "<?php echo env('APP_URL'); ?>:8000/hotspot/guest/user/"+id
                 )
                 .then((response) => {
                     userProfileInfo.innerHTML = `User Profile ${response.data.name}`;
@@ -301,15 +302,41 @@
 
             userProfilesaveFooterBtn.addEventListener('click',() =>{
             axios
-                .patch("<?php echo env('APP_URL'); ?>:8000/hotspot/user/profile/"+id,{
+                .patch("<?php echo env('APP_URL'); ?>:8000/hotspot/guest/profile/"+iduser,{
                     'user_profile' : userProfileGroup.value,
                     'rate_limit'   : userProfileLimitRate.value,
                     'time_limit'   : userProfileTimeLimit.value,
                     'expire'       : userProfileExpire.value
                 })
-                .then(
-
-                )
+                .then((response) => {
+                    const data = response.data;
+                    if (data['error']) {
+                        const pesan = data['msg'];
+                        let pesan_error;
+                        if ('user_profile' in pesan) {
+                            pesan_error = pesan.user_profile[0]+"\n";
+                        }
+                        if ('rate_limit' in pesan) {
+                            pesan_error = pesan_error+pesan.rate_limit[0]+"\n";
+                        }
+                        if ('time_limit' in pesan) {
+                            pesan_error = pesan_error+pesan.time_limit[0]+"\n";
+                        }
+                        swal({
+                            title: 'Validation data',
+                            text: pesan_error,
+                            icon: 'error',
+                            button: true
+                        });
+                    } else {
+                        userprofilemodal.classList.add('hidden');
+                        location.reload();
+                    }
+                })
+                .catch(err => {
+                    console.log('Oh noooo!!');
+                    console.log(err.response.data);
+                })
             })
         </script>
 
