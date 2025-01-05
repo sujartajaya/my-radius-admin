@@ -69,6 +69,7 @@ Route::prefix('/test')->group(function () {
 });
 
 Route::middleware('auth')->prefix('/hotspot')->group(function () {
+    Route::post('/mac/binding',[MikrotikController::class,'add_mac_binding']); /** api */
     Route::get('/users',[UserhotspotController::class,'index']); /** blade */
     Route::post('/user',[UserhotspotController::class,'store']); /** api */
     Route::get('/user/{id}',[UserhotspotController::class,'edit']); /** api */

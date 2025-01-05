@@ -160,7 +160,7 @@ class MikrotikController extends Controller
 
     function isValidMacAddress($macAddress) {
         // Pola regex untuk MAC address yang valid
-        $pattern = '/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/';
+        $pattern = '/^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/';
 
         // Validasi menggunakan preg_match
         if (preg_match($pattern, $macAddress)) {
@@ -171,4 +171,35 @@ class MikrotikController extends Controller
     }
 
 
+    public function add_mac_binding(Request $request)
+    {
+        $data_mac = $request->mac;
+        if ($this->isValidMacAddress($data_mac)) {
+            
+            $ip = env('MIKROTIK_IP');
+            $user = env('MIKROTIK_USER');
+            $password = env('MIKROTIK_PASSWORD');
+            $API = new Mikrotik();
+            $API->debug = false;
+
+            if ($API->connect($ip, $user, $password)) {
+                $API->comm('/ip/hotspot/ip-binding/add',[
+                    'mac-address'=> $request->mac,
+                    'type' => $request->type,
+                    'comment' => $request->comment,
+                ]);
+                $data['error'] = false;
+                $data['msg'] = "Mac Address has been added";
+                return response()->json($data,201);
+            } else {
+                $data['error'] = true;
+                $data['msg'] = "Error connect to gateway!";
+                return response()->json($data,200);
+            }
+        } else {
+            $data['error'] = true;
+            $data['msg'] = "Mac Address invalid!";
+            return response()->json($data,200);
+        }
+    }
 }

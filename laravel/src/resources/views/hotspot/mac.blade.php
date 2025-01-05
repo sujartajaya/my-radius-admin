@@ -52,7 +52,7 @@
         </div>
         <!-- end Uset table -->
         <!-- Modal add mac add -->
-            <div id="userProfileModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+            <div id="macModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
                 <div class="bg-white w-full max-w-4xl rounded-lg shadow-lg">
                     <!-- Modal Header -->
                     <div class="flex justify-between items-center px-6 py-4 border-b">
@@ -75,10 +75,10 @@
                                                         <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="mac" type="text" placeholder="00:00:00:00:00:00">
                                                     </div>
                                                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="userProfileGroup">
+                                                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="type">
                                                             Type
                                                         </label>
-                                                        <select class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="userProfileGroup" type="checkbox">
+                                                        <select class="block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="type">
                                                         <option value="blocked">blocked</option>
                                                         <option value="bypassed">bypassed</option>
                                                         <option value="regular">regular</option>
@@ -90,13 +90,16 @@
                                                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="comment">
                                                         Description
                                                         </label>
-                                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="comment" type="number" placeholder="60">
+                                                        <input class="block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="comment" type="text" placeholder="Description">
                                                     </div>
-                                                    <div class="w-full md:w-1/2 px-3">
-                                                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="userProfileExpire">
-                                                            Expire User
+                                                    <div class="w-full md:w-1/2 px-3 hidden">
+                                                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="disabled">
+                                                            Disabled
                                                         </label>
-                                                        <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="userProfileExpire" type="datetime-local">
+                                                        <select class="block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="disabled">
+                                                        <option value="false">No</option>
+                                                        <option value="true">Yes</option>
+                                                        </select>
                                                     </div>
                                         </div>
                                         </form>
@@ -105,12 +108,12 @@
                     <!-- Modal Footer -->
                     <div class="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b space-x-2">
                     <button
-                        id="userProfilecloseFooterBtn"
+                        id="macCloseFooterBtn"
                         class="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
                     >
                         Close
                     </button>
-                    <button id="userProfilesaveFooterBtn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">
+                    <button id="macSaveFooterBtn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400">
                     Save
                     </button>
                     </div>
@@ -204,6 +207,60 @@
             renderTable(currentPage);
             
         </script>
+        <script>
+            const macModal = document.getElementById('macModal');
+            const openModalBtn = document.getElementById('openModalBtn');
+            const macCloseFooterBtn = document.getElementById('macCloseFooterBtn');
+            const macSaveFooterBtn = document.getElementById('macSaveFooterBtn');
+            const mac = document.getElementById('mac');
+            const type = document.getElementById('type');
+            const comment = document.getElementById('comment');
+            const disabled = document.getElementById('disabled');
+
+            openModalBtn.addEventListener('click', () => {
+                macModal.classList.remove('hidden');
+            });
+            
+            macCloseFooterBtn.addEventListener('click', () => {
+                macModal.classList.add('hidden');
+            });
+
+            macSaveFooterBtn.addEventListener('click', () => {
+                axios
+                    .post(
+                        "<?php echo env('APP_URL'); ?>:8000/hotspot/mac/binding", {
+                            'mac': mac.value,
+                            'type' : type.value,
+                            'comment' : comment.value,
+                            'disabled' : disabled.velue
+                        },{
+                              headers: {
+                                  'Content-Type': 'multipart/form-data'
+                              }
+                          }
+                    )
+                    .then((response) => {
+                        const data = response.data;
+                        if (data['error'] == false) {
+                            macModal.classList.add('hidden');
+                            location.reload();
+                        } else {
+                            swal({
+                                title: 'Error Data',
+                                text: data['msg'],
+                                icon: 'error',
+                                button: true
+                            });
+                        }
+                    }
+                    ).catch(err => {
+                        console.log('Oh noooo!!');
+                        console.log(err.response.data);
+                    })
+            });
+
+        </script>
+
     @endsection
     @section('mystyle')
         <style>
