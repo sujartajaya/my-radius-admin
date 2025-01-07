@@ -80,7 +80,8 @@ class WebloginController extends Controller
         $email = $request->email;
         $pesan = [];
         $waktu = new DateTime();
-        $waktu1 = $waktu->modify("+360 minutes");
+        $time_expire = "+".env('USER_PROFILE_EXPIRE')." minutes";
+        $waktu1 = $waktu->modify($time_expire);
         $expiration = $waktu1->format('d M Y H:i:s');
         /** cek format email */
         if (preg_match($pattern, $email)) {

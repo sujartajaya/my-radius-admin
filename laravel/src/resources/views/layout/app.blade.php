@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   @vite('resources/css/app.css')
   @yield('mystyle')
+  @yield('addscript')
 </head>
 <body class="w-screen overflow-y-auto overflow-x-hidden" style="background: #ccf5ff;">
 

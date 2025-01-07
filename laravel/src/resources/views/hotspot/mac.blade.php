@@ -1,5 +1,65 @@
 @extends('layout.app')
     @section('content')
+        <script>
+            let editmac = false;
+            let idmac = "";
+
+            function edit(id) {
+                idmac = id;
+                editmac = true;
+                axios
+                    .get(
+                        `<?php echo env('APP_URL'); ?>:8000/hotspot/mac/binding/${id}`
+                    )
+                    .then((response) => {
+                        const data = response.data;
+                        const mac = data['mac'][0];
+
+                        if (data['error'] == false) {
+                            const frmmac = document.getElementById('mac');
+                            const type = document.getElementById('type');
+                            const comment = document.getElementById('comment');
+                            const disabled = document.getElementById('disabled');
+                            const frmdisable = document.getElementById('frmdisable');
+                            const macSaveFooterBtn = document.getElementById('macSaveFooterBtn');
+                            const macModal = document.getElementById('macModal');
+                            frmdisable.classList.remove('hidden');
+                            frmmac.value = mac['mac-address'];
+                            type.value = mac['type'];
+                            comment.value = mac['comment'];
+                            disabled.value = mac['disabled'];
+                            macSaveFooterBtn.innerHTML = "Update";
+                            macModal.classList.remove('hidden');
+                        }
+                    })
+                    .catch(err => {
+                        console.log('Oh noooo!!');
+                        console.log(err);
+                    })
+            }
+
+            function confirmDelete(id) {
+                const userConfirmed = confirm("Are you sure you want to delete this item?");
+                if (userConfirmed) {
+                    axios
+                    .post(
+                         `<?php echo env('APP_URL'); ?>:8000/hotspot/mac/binding/${id}`,{
+                            'id': id
+                        })
+                    .then((response) => {
+                        const data = response.data;
+                        console.log(data);
+                        if (data['error'] == false) {
+                            location.reload();
+                        }
+                    })
+                    .catch(err => {
+                        console.log('Oh noooo!!');
+                        console.log(err.response.data);
+                    })
+                }
+            }
+        </script>
         <!-- User table -->    
         <div class="max-w w-full">
             <div class="flex flex-col items-center justify-center px-3 py-8 mx-auto lg:py-0 mt-1">
@@ -92,7 +152,7 @@
                                                         </label>
                                                         <input class="block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="comment" type="text" placeholder="Description">
                                                     </div>
-                                                    <div class="w-full md:w-1/2 px-3 hidden">
+                                                    <div class="w-full md:w-1/2 px-3 hidden" id="frmdisable">
                                                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="disabled">
                                                             Disabled
                                                         </label>
@@ -121,8 +181,7 @@
             </div>
         <!-- end modal add macc -->
 
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        
         <script>
             let data = [];
             <?php if ($data['error'] == false) { ?>
@@ -150,12 +209,12 @@
                     <td class="border border-gray-300 px-4 py-2 text-sm text-gray-700">
                     <div class="flex space-x-2">
                         <button
-                            class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400" onClick="edit()"
+                            class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400" onClick="edit('${item['.id']}')"
                             >
                             Edit
                         </button>
                         <button
-                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400" onClick="edit()"
+                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400" onClick="confirmDelete('${item['.id']}')"
                             >
                             Delete
                         </button>
@@ -216,9 +275,17 @@
             const type = document.getElementById('type');
             const comment = document.getElementById('comment');
             const disabled = document.getElementById('disabled');
+            const frmdisable = document.getElementById('frmdisable');
 
             openModalBtn.addEventListener('click', () => {
+                editmac = false;
+                macSaveFooterBtn.innerHTML = "Save";
                 macModal.classList.remove('hidden');
+                frmdisable.classList.add('hidden');
+                mac.value = "";
+                type.value = "blocked";
+                comment.value = "";
+                disabled.value = "no";
             });
             
             macCloseFooterBtn.addEventListener('click', () => {
@@ -226,7 +293,8 @@
             });
 
             macSaveFooterBtn.addEventListener('click', () => {
-                axios
+                if (editmac == false) {
+                    axios
                     .post(
                         "<?php echo env('APP_URL'); ?>:8000/hotspot/mac/binding", {
                             'mac': mac.value,
@@ -257,6 +325,31 @@
                         console.log('Oh noooo!!');
                         console.log(err.response.data);
                     })
+                } else {
+                    axios
+                    .patch(`<?php echo env('APP_URL'); ?>:8000/hotspot/mac/binding/${idmac}`, {
+                        'mac' : mac.value,
+                        'type' : type.value,
+                        'comment' : comment.value,
+                        'disabled' : disabled.value
+                    })
+                    .then((response) => {
+                        const data = response.data;
+                        console.log(data);
+                        if(data['error'] == false) {
+                            macModal.classList.add('hidden');
+                            location.reload();
+                        } else {
+                            swal({
+                                title: 'Error Data',
+                                text: data['msg'],
+                                icon: 'error',
+                                button: true
+                            });
+                        }
+                    })
+                }
+
             });
 
         </script>
@@ -291,4 +384,8 @@
             }
         </style>
     @endsection
-
+    @section('addscript')
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @endsection
+    

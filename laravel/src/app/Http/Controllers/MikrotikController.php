@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Mikrotik;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class MikrotikController extends Controller
 {
@@ -202,4 +204,140 @@ class MikrotikController extends Controller
             return response()->json($data,200);
         }
     }
+
+    public function edit_mac_binding($id)
+    {
+        $ip = env('MIKROTIK_IP');
+        $user = env('MIKROTIK_USER');
+        $password = env('MIKROTIK_PASSWORD');
+        $API = new Mikrotik();
+        $API->debug = false;
+
+        if ($API->connect($ip, $user, $password)) {
+            $getmac = $API->comm('/ip/hotspot/ip-binding/print', [
+				"?.id" => $id,
+			]);
+            $data['error'] = false;
+            $data['mac'] = $getmac;
+            return response()->json($data,200);
+        } else {
+            $data['error'] = true;
+            $data['msg'] = "Error connection to the gateway!";
+            return response()->json($data,200);
+        }
+    }
+
+    public function update_mac_binding(Request $request, $id)
+    {
+        $ip = env('MIKROTIK_IP');
+        $user = env('MIKROTIK_USER');
+        $password = env('MIKROTIK_PASSWORD');
+        $API = new Mikrotik();
+        $API->debug = false;
+
+        if ($this->isValidMacAddress($request->mac)) {
+            $validator = Validator::make($request->all(), [
+                    'mac' => ['required'],
+                    'type' => ['required'],
+                    'comment' => ['required'],
+                    'disabled' => ['required'],
+            ]);
+            if($validator->fails()){
+                $data['error'] = true;
+                $data['msg'] = $validator->messages();
+                return response()->json($data, 200);
+            }
+            if ($API->connect($ip, $user, $password)) {
+                $API->comm("/ip/hotspot/ip-binding/set",[
+                    '.id' => $id,
+                    'mac-address' => $request->mac,
+                    'type' => $request->type,
+                    'comment' => $request->comment,
+                    'disabled' => $request->disabled
+                ]);
+                $data['error'] = false;
+                $data['msg'] = "Mac Address updated!";
+                return response()->json($data,200);
+            }
+        } else {
+            $data['error'] = true;
+            $data['msg'] = "Mac Address invalid! ".$request->mac;
+            return response()->json($data,200);
+        }
+    }
+
+    public function delete_mac_binding(Request $request)
+    {
+        $ip = env('MIKROTIK_IP');
+        $user = env('MIKROTIK_USER');
+        $password = env('MIKROTIK_PASSWORD');
+        $API = new Mikrotik();
+        $API->debug = false;
+
+        if ($API->connect($ip, $user, $password)) {
+            $API->comm("/ip/hotspot/ip-binding/remove",[
+                '.id' => $request->id 
+            ],);
+            $data['error'] = false;
+            $data['msg'] = "Mac Address has been deleted!";
+            return response()->json($data,200);
+        } else {
+            $data['error'] = true;
+            $data['msg'] = "Error connected to gateway!";
+            return response()->json($data,200);
+        }
+    }
+
+    function changeEnvValue($key, $newValue)
+    {
+        $envFile =base_path('/.env'); // Path to the .env file
+        $updated = false;
+
+        if (!file_exists($envFile)) {
+            throw new Exception('.env file does not exist.');
+        }
+
+        // Read file into an array
+        $lines = file($envFile);
+
+        foreach ($lines as $index => $line) {
+            // Skip comments or empty lines
+            if (strpos(trim($line), '#') === 0 || trim($line) === '') {
+                continue;
+            }
+
+            // Match the key
+            if (strpos($line, $key . '=') === 0) {
+                $lines[$index] = $key . '=' . $newValue . PHP_EOL; // Update the line
+                $updated = true;
+                break;
+            }
+        }
+
+        // If the key was not found, append it
+        if (!$updated) {
+            $lines[] = $key . '=' . $newValue . PHP_EOL;
+        }
+
+        // Write the updated content back to the file
+        file_put_contents($envFile, implode('', $lines));
+    }
+
+    public function set_login_email_profile(Request $request)
+    {
+        $expire = $request->expire;
+        try {
+            $this->changeEnvValue('USER_PROFILE_EXPIRE',$expire);
+            $data['error'] = false;
+            $data['msg'] = "Update variable success";
+            return response()->json($data,200);
+        }catch (Exception $e) {
+            
+            $data['error'] = true;
+            $data['msg'] = $e->getMessage();
+            return response()->json($data,200);
+        }
+    }
+
+
 }

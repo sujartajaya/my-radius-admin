@@ -61,15 +61,22 @@ Route::prefix('/test')->group(function () {
     Route::post('/loginv2',[TestController::class,'loginv2']);
     Route::get('/modal',[WebloginController::class,'viewModal']);
     Route::get('/users/{username}',[WebloginController::class,'showUser']);
-    Route::get('/table', function () {
-        return view('test.tab5');
+    Route::get('/csv', function () {
+        return view('test.exportcsv');
+    });
+    Route::get('/form', function () {
+        return view('test.form1');
     });
     Route::get('/dashboard',[MikrotikController::class,'system']);
+    Route::post('/user/profile',[MikrotikController::class,'set_login_email_profile']);
     
 });
 
 Route::middleware('auth')->prefix('/hotspot')->group(function () {
     Route::post('/mac/binding',[MikrotikController::class,'add_mac_binding']); /** api */
+    Route::get('/mac/binding/{id}',[MikrotikController::class,'edit_mac_binding']); /** api */
+    Route::patch('/mac/binding/{id}',[MikrotikController::class,'update_mac_binding']); /** api */
+    Route::post('/mac/binding/{id}',[MikrotikController::class,'delete_mac_binding']); /** api */
     Route::get('/users',[UserhotspotController::class,'index']); /** blade */
     Route::post('/user',[UserhotspotController::class,'store']); /** api */
     Route::get('/user/{id}',[UserhotspotController::class,'edit']); /** api */
