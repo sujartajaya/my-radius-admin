@@ -88,10 +88,13 @@ Route::middleware('auth')->prefix('/hotspot')->group(function () {
     Route::patch('/guest/profile/{id}',[GuestuserController::class,'update_profile']); /** api */
     Route::patch('/guest/user/{id}',[GuestuserController::class,'update']); /** api */
     Route::get('/mac/{code}', [MikrotikController::class,'show_mac_binding']);/** blade || api*/
+    Route::get('/user/email/profile', [MikrotikController::class,'form_login_email_profile']);/** blade */
+    Route::patch('/user/email/profile/{id}', [MikrotikController::class,'set_login_email_profile']);/** api */
     Route::get('/login/user',[WebloginController::class,'getAllUsers']);
     Route::get('/user/create',[WebloginController::class,'create']);
     Route::post('/radreply',[RadreplyController::class,'store']);
     Route::get('/usergroup',[RadgroupreplyController::class,'show']);
+    Route::get('/user/email/active',[MikrotikController::class,'login_email_active']); /** blade */
 
 });
 

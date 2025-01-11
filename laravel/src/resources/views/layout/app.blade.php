@@ -44,8 +44,8 @@
                           class="absolute left-0 w-40 mt-1 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                           <div class="py-1">
                               <a href="/hotspot/mac/blade" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mac Add Binding</a>
-                              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login Email Profile</a>
-                              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Kill User</a>
+                              <a href="/hotspot/user/email/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login Email Profile</a>
+                              <a href="/hotspot/user/email/active" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Active User</a>
                           </div>
                       </div>
                   </div>

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mikrotik;
+use App\Models\Radgroupreply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class MikrotikController extends Controller
 {
@@ -323,21 +325,67 @@ class MikrotikController extends Controller
         file_put_contents($envFile, implode('', $lines));
     }
 
-    public function set_login_email_profile(Request $request)
+    public function set_login_email_profile(Request $request, $id) 
     {
         $expire = $request->expire;
+        if (!$expire) $expire = 60;
+        $rate_limit = $request->rate_limit;
+        if (!$rate_limit) $rate_limit = "1M/1M 2M/2M 1M/1M 40/40";
         try {
             $this->changeEnvValue('USER_PROFILE_EXPIRE',$expire);
+            $radgroupreply = DB::table('radgroupreply')->where('id',$id)->update(['value' => $rate_limit]);
             $data['error'] = false;
             $data['msg'] = "Update variable success";
             return response()->json($data,200);
         }catch (Exception $e) {
-            
             $data['error'] = true;
             $data['msg'] = $e->getMessage();
             return response()->json($data,200);
         }
     }
+    
+    public function form_login_email_profile()
+    {
+        $expire = env('USER_PROFILE_EXPIRE');
+        $radgroupreply = Radgroupreply::where('groupname','GUEST')->where('attribute','Mikrotik-Rate-Limit')->first();   
+        return view('hotspot.guestprofile',compact('expire','radgroupreply'));
+    }
 
+    public function login_email_active()
+    {
+        $ip = env('MIKROTIK_IP');
+        $user = env('MIKROTIK_USER');
+        $password = env('MIKROTIK_PASSWORD');
+        $API = new Mikrotik();
+        $API->debug = false;
+        if ($API->connect($ip, $user, $password)) {
+
+			$active_user = $API->comm('/ip/hotspot/active/print');
+            if (count($active_user) > 0) { 
+                $data = [
+                    'error' => false,
+                    'title' => 'Hotspot Active User',
+                    'active_user' => $active_user,
+                ];
+            } else {
+                $data = [
+                    'error' => true,
+                    'title' => 'Hotspot Active User',
+                    'msg' => "Empty data",
+                ];
+            }
+            return view('hotspot.guestactive',compact('data'));
+            // return response()->json($data,200);
+
+		} else {
+            $data = [
+                'error' => true,
+                'title' => 'Hotspot Active User',
+                'msg' => 'Error while fetch of data!',
+            ];
+            return view('hotspot.guestactive',compact('data'));
+            // return response()->json($data,200);
+		}
+    }
 
 }

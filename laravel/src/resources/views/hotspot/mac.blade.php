@@ -60,7 +60,7 @@
                 }
             }
         </script>
-        <!-- User table -->    
+        <!-- mac table -->
         <div class="max-w w-full">
             <div class="flex flex-col items-center justify-center px-3 py-8 mx-auto lg:py-0 mt-1">
                 <div class="w-full max-w-6xl bg-white rounded-lg shadow-md p-6">
@@ -110,7 +110,7 @@
                 </div>
             </div>
         </div>
-        <!-- end Uset table -->
+        <!-- end mac table -->
         <!-- Modal add mac add -->
             <div id="macModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
                 <div class="bg-white w-full max-w-4xl rounded-lg shadow-lg">
