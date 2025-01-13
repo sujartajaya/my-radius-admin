@@ -1,9 +1,9 @@
 @extends('layout.app')
     @section('content')
         <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0 mt-10">
-            <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 justify-center items-center">
+            <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0 justify-center items-center overflow-hidden" style="background-image: url('bg.jpg');">
                 <div class="flex items-center justify-center">
-                    <img src="/logo.png" alt="Logo" width="30%" height="30%"/>
+                    <img src="/medialink-logo.png" alt="Logo" width="30%" height="30%"/>
                 </div>
                 <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                     
