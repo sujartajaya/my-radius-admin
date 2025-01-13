@@ -4,7 +4,7 @@
             let editdata = false;let iduser = 0;
             function edit(id) {
                 editdata = true;iduser = id;const saveFooterBtn = document.getElementById('saveFooterBtn');const modal = document.getElementById('largeModal');saveFooterBtn.innerHTML = "Update";
-                axios.get("<?php echo env('APP_URL'); ?>:8000/hotspot/guest/user/"+id).then((response) => {const name = document.getElementById('name');const email = document.getElementById('email');const username = document.getElementById('username');const password = document.getElementById('password');const phone = document.getElementById('phone');const address = document.getElementById('address');name.value = response.data.name;email.value = response.data.email;username.value = response.data.username;password.value = response.data.password;phone.value = response.data.phone;address.value = response.data.address;}).catch(err => {console.log('Oh noooo!!');console.log(err.response.data);});
+                axios.get("<?php echo env('APP_URL_AXIOS'); ?>/hotspot/guest/user/"+id).then((response) => {const name = document.getElementById('name');const email = document.getElementById('email');const username = document.getElementById('username');const password = document.getElementById('password');const phone = document.getElementById('phone');const address = document.getElementById('address');name.value = response.data.name;email.value = response.data.email;username.value = response.data.username;password.value = response.data.password;phone.value = response.data.phone;address.value = response.data.address;}).catch(err => {console.log('Oh noooo!!');console.log(err.response.data);});
                 modal.classList.remove('hidden');
             }
         </script>        
@@ -164,7 +164,7 @@
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script>
-            const per_page = {{ $guestusers->perPage() }};let last_page = {{ $guestusers->lastPage() }};const url_base = "{{ env('APP_URL')}}:8000/hotspot/guest/users";const data_table = {{ $guestusers->total() }};
+            const per_page = {{ $guestusers->perPage() }};let last_page = {{ $guestusers->lastPage() }};const url_base = "{{ env('APP_URL_AXIOS')}}/hotspot/guest/users";const data_table = {{ $guestusers->total() }};
             const openModalBtn = document.getElementById('openModalBtn');const closeModalBtn = document.getElementById('closeModalBtn');const closeFooterBtn = document.getElementById('closeFooterBtn');const modal = document.getElementById('largeModal');const saveFooterBtn = document.getElementById('saveFooterBtn');
             openModalBtn.addEventListener('click', () => {
                 editdata = false;saveFooterBtn.innerHTML = "Save";const name = document.getElementById('name');const email = document.getElementById('email');const username = document.getElementById('username');const password = document.getElementById('password');
@@ -174,14 +174,14 @@
             saveFooterBtn.addEventListener('click', () => {
                 modal.classList.remove('hidden');const name = document.getElementById('name');const email = document.getElementById('email');const username = document.getElementById('username');const password = document.getElementById('password');const phone = document.getElementById('phone');const address = document.getElementById('address');
                 if (editdata == false) {
-                    axios.post("<?php echo env('APP_URL'); ?>:8000/hotspot/guest/user",{'name' : name.value,'email' : email.value,'username' : username.value,'password' : password.value,'phone' : phone.value,'address' : address.value,},{headers: {'Content-Type': 'multipart/form-data'}})
+                    axios.post("<?php echo env('APP_URL_AXIOS'); ?>/hotspot/guest/user",{'name' : name.value,'email' : email.value,'username' : username.value,'password' : password.value,'phone' : phone.value,'address' : address.value,},{headers: {'Content-Type': 'multipart/form-data'}})
                     .then((response) => {const data = response.data;if (data['error']) {const pesan = data['msg'];let pesan_error;if ('name' in pesan) {pesan_error = pesan.name[0]+"\n";}if ('email' in pesan) {pesan_error = pesan_error+pesan.email[0]+"\n";} if ('username' in pesan) {pesan_error = pesan_error+pesan.username[0]+"\n";}if ('password' in pesan) {pesan_error = pesan_error+pesan.password[0]+"\n";} swal({title: 'Validation data',text: pesan_error,icon: 'error',button: true,});} else {modal.classList.add('hidden');let sisa = data_table % per_page;if (sisa == 0) {if (last_page >= 1){last_page = last_page + 1;}location.replace(url_base+"?page="+last_page);} else {location.replace(url_base+"?page="+last_page);}}})
                     .catch(err => {
                         console.log('Oh noooo!!');
                         console.log(err.response.data);
                     });
                 } else {
-                    axios.patch(`<?php echo env('APP_URL'); ?>:8000/hotspot/guest/user/${iduser}`,{'name' : name.value,'email' : email.value,'username' : username.value,'password' : password.value,'phone' : phone.value,'address' : address.value,})
+                    axios.patch(`<?php echo env('APP_URL_AXIOS'); ?>/hotspot/guest/user/${iduser}`,{'name' : name.value,'email' : email.value,'username' : username.value,'password' : password.value,'phone' : phone.value,'address' : address.value,})
                         .then((response) => {const data = response.data;if (data['error']) {const pesan = data['msg'];let pesan_error;if ('email' in pesan) {pesan_error = pesan_error+pesan.email.email[0]+"\n";}if ('username' in pesan) {pesan_error = pesan_error+pesan.username.username[0]+"\n";}swal({title: 'Validation data',text: pesan_error,icon: 'error',button: true,});} else {modal.classList.add('hidden');location.reload();}})
                         .catch(err => {console.log('Oh noooo!!');console.log(err.response.data);})
                 }
@@ -283,7 +283,7 @@
                 iduser = id;
                 axios
                 .get(
-                    "<?php echo env('APP_URL'); ?>:8000/hotspot/guest/user/"+id
+                    "<?php echo env('APP_URL_AXIOS'); ?>/hotspot/guest/user/"+id
                 )
                 .then((response) => {
                     userProfileInfo.innerHTML = `User Profile ${response.data.name}`;
@@ -302,7 +302,7 @@
 
             userProfilesaveFooterBtn.addEventListener('click',() =>{
             axios
-                .patch("<?php echo env('APP_URL'); ?>:8000/hotspot/guest/profile/"+iduser,{
+                .patch("<?php echo env('APP_URL_AXIOS'); ?>/hotspot/guest/profile/"+iduser,{
                     'user_profile' : userProfileGroup.value,
                     'rate_limit'   : userProfileLimitRate.value,
                     'time_limit'   : userProfileTimeLimit.value,

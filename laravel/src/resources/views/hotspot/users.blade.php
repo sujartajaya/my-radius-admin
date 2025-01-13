@@ -11,7 +11,7 @@
         saveFooterBtn.innerHTML = "Update";
         axios
             .get(
-              "<?php echo env('APP_URL'); ?>:8000/hotspot/user/"+id
+              "<?php echo env('APP_URL_AXIOS'); ?>/hotspot/user/"+id
             )
             .then((response) => {
                 const name = document.getElementById('name');
@@ -214,7 +214,7 @@
       // JavaScript to handle modal visibility
       const per_page = {{ $userhotspots->perPage() }}
       let last_page = {{ $userhotspots->lastPage() }}
-      const url_base = "{{ env('APP_URL')}}:8000/hotspot/users";
+      const url_base = "{{ env('APP_URL_AXIOS')}}/hotspot/users";
       const data_table = {{ $userhotspots->total() }}
 
       const openModalBtn = document.getElementById('openModalBtn');
@@ -260,7 +260,7 @@
           // const time_over = document.getElementById('time_over');
           if (editdata == false) {
           axios
-            .post("<?php echo env('APP_URL'); ?>:8000/hotspot/user",{
+            .post("<?php echo env('APP_URL_AXIOS'); ?>/hotspot/user",{
                               'name' : name.value,
                               'email' : email.value,
                               'username' : username.value,
@@ -325,7 +325,7 @@
             })
           } else {
             axios
-              .patch(`<?php echo env('APP_URL'); ?>:8000/hotspot/user/${iduser}`,{
+              .patch(`<?php echo env('APP_URL_AXIOS'); ?>/hotspot/user/${iduser}`,{
                               'name' : name.value,
                               'email' : email.value,
                               'username' : username.value,
@@ -467,7 +467,7 @@
         function openUserProfileModal(id) {
             axios
               .get(
-                "<?php echo env('APP_URL'); ?>:8000/hotspot/user/"+id
+                "<?php echo env('APP_URL_AXIOS'); ?>/hotspot/user/"+id
               )
               .then((response) => {
                   userProfileInfo.innerHTML = `User Profile ${response.data.name}`;
@@ -486,7 +486,7 @@
 
         userProfilesaveFooterBtn.addEventListener('click',() =>{
           axios
-            .patch("<?php echo env('APP_URL'); ?>:8000/hotspot/user/profile/"+id,{
+            .patch("<?php echo env('APP_URL_AXIOS'); ?>/hotspot/user/profile/"+id,{
                 'user_profile' : userProfileGroup.value,
                 'rate_limit'   : userProfileLimitRate.value,
                 'time_limit'   : userProfileTimeLimit.value,
