@@ -375,7 +375,7 @@ class MikrotikController extends Controller
                 ];
             }
             return view('hotspot.guestactive',compact('data'));
-            // return response()->json($data,200);
+            //  return response()->json($data,200);
 
 		} else {
             $data = [
