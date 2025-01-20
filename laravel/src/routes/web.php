@@ -69,6 +69,7 @@ Route::prefix('/test')->group(function () {
     });
     Route::get('/dashboard',[MikrotikController::class,'system']);
     Route::post('/user/profile',[MikrotikController::class,'set_login_email_profile']);
+    Route::get('/traffic/{ether}',[MikrotikController::class,'get_traffic']);
     
 });
 

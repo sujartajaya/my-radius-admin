@@ -388,4 +388,35 @@ class MikrotikController extends Controller
 		}
     }
 
+    public function get_traffic($interface)
+    {
+        $ip = env('MIKROTIK_IP');
+        $user = env('MIKROTIK_USER');
+        $password = env('MIKROTIK_PASSWORD');
+        $API = new Mikrotik();
+        $API->debug = false;
+        if ($API->connect($ip, $user, $password)) {
+			$getinterfacetraffic = $API->comm("/interface/monitor-traffic", array(
+				"interface" => $interface,
+				"once" => "",
+			));
+			$ftx = $getinterfacetraffic[0]['tx-bits-per-second'];
+			$frx = $getinterfacetraffic[0]['rx-bits-per-second'];
+
+			$rows['name'] = 'Tx';
+			$rows['data'][] = $ftx;
+			$rows2['name'] = 'Rx';
+			$rows2['data'][] = $frx;
+			$result = array();
+
+			array_push($result, $rows);
+			array_push($result, $rows2);
+			print json_encode($result);
+
+		} else {
+			echo "<font color='#ff0000'>Connection Failed!!</font>";
+		}
+		$API->disconnect();
+    }
+
 }
