@@ -45,7 +45,8 @@
                           <div class="py-1">
                               <a href="/hotspot/mac/blade" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mac Add Binding</a>
                               <a href="/hotspot/user/email/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login Email Profile</a>
-                              <a href="/hotspot/user/email/active" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Active User</a>
+                              <a href="/hotspot/user/email/active" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Active Users</a>
+                              <a href="/hotspot/email/users" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Email Users</a>
                           </div>
                       </div>
                   </div>

@@ -75,4 +75,10 @@ class RadcheckController extends Controller
     {
         //
     }
+
+    public function get_email_users(Request $request)
+    {
+        $emailusers = Radcheck::select('username')->search($request->search)->where('attribute','Cleartext-Password')->where('username','LIKE','%@%')->groupby('username')->paginate(8);
+        return view('hotspot.userguest',compact('emailusers'));
+    }
 }

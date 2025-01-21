@@ -9,6 +9,7 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserhotspotController;
 use App\Http\Controllers\MikrotikController;
 use App\Http\Controllers\RadreplyController;
+use App\Http\Controllers\RadcheckController;
 use App\Http\Controllers\RadgroupreplyController;
 use App\Http\Controllers\GuestuserController;
 
@@ -96,6 +97,7 @@ Route::middleware('auth')->prefix('/hotspot')->group(function () {
     Route::post('/radreply',[RadreplyController::class,'store']);
     Route::get('/usergroup',[RadgroupreplyController::class,'show']);
     Route::get('/user/email/active',[MikrotikController::class,'login_email_active']); /** blade */
+    Route::get('/email/users',[RadcheckController::class,'get_email_users']); /** blade */
 
 });
 
