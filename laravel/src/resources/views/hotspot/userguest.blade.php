@@ -76,7 +76,8 @@
     </div>
     <script>
         function export_data(filename) {
-            fetch('http://localhost:8000/test/userguest/export', {
+            const url_base = "{{ env('APP_URL_AXIOS')}}/test/userguest/export";
+            fetch(url_base, {
             method: 'GET'
             }).then((response) => {
 
@@ -92,22 +93,16 @@
                             return item;
                          });
                     }
-                    // console.log(jsonResponse);
                     const headers = Object.keys(jsonResponse[0]);
                     const rows = jsonResponse.map(obj => 
                         headers.map(header => 
                             `"${obj[header] || ''}"`
                         ).join(','));
-                    // console.log(rows);
                     const csvContent = [headers.join(','), ...rows].join('\n');
-                    console.log(csvContent);
-                    // Create a Blob with CSV content
                     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(blob);
                     link.download = filename;
-
-                    // Trigger download
                     link.style.display = 'none';
                     document.body.appendChild(link);
                     link.click();
